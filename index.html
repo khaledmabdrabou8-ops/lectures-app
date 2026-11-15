@@ -130,12 +130,18 @@ textarea{resize:vertical;line-height:1.7}
 .tk{display:flex;gap:8px;align-items:flex-start;padding:4px 0;line-height:1.7}
 .tk.dn span{opacity:.5;text-decoration:line-through}
 .warn{background:var(--ab);color:var(--at);border:1px solid var(--abd);border-radius:12px;padding:10px 12px;margin:8px 0}
+.ch{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center}
+.ch[hidden]{display:none}
+.chs{background:var(--bg);width:100%;max-width:640px;border-radius:18px 18px 0 0;padding:16px 16px calc(16px + env(safe-area-inset-bottom,0px))}
+.chs h3{margin:0 0 10px;font-size:16px;text-align:center}
+.chs button{width:100%;margin:6px 0;padding:16px;font-size:17px}
 .credit{text-align:center;color:var(--mut);font-size:13px;padding:8px 16px 28px}
 .credit b{color:var(--ac)}
 </style>
 </head>
 <body>
 <div id="offb" class="off" hidden>📴 مفيش إنترنت — بتشوف آخر نسخة محفوظة على جهازك.</div>
+<div id="ch" class="ch" hidden></div>
 <div id="pl" class="pl" hidden></div>
 <main id="app"><p class="empty">جاري التحميل…</p></main>
 <footer class="credit">صُنع بحب بواسطة <b>خالد</b> ✨</footer>
@@ -260,6 +266,19 @@ function guide(){
   const p=document.getElementById('prv');if(p)p.onclick=()=>{gi--;guide()};
 }
 
+/* ---------- اختيار بين ملف وفيديو (للسكاشن) ---------- */
+const hasV2=i=>/^https?:\/\//i.test(i.url||'')&&/^https?:\/\//i.test(i.url2||'');
+function closeChoice(){const c=document.getElementById('ch');if(c){c.hidden=true;c.innerHTML=''}}
+function openChoice(it){
+  const c=document.getElementById('ch');if(!c)return openPlayer(it);
+  c.innerHTML=`<div class="chs"><h3>${esc(it.title)}</h3><button id="chf">📄 ملف</button><button id="chv">🎬 فيديو</button><button class="g" id="chx">إلغاء</button></div>`;
+  c.hidden=false;
+  c.onclick=e=>{if(e.target===c)closeChoice()};
+  document.getElementById('chx').onclick=closeChoice;
+  document.getElementById('chf').onclick=()=>{closeChoice();openPlayer(Object.assign({},it,{kind:'slides'}))};
+  document.getElementById('chv').onclick=()=>{closeChoice();openPlayer(Object.assign({},it,{url:it.url2,kind:'rec'}))};
+}
+
 /* ---------- مشغّل داخل التطبيق (يوتيوب / درايف / ملفات صوت وفيديو) ---------- */
 let playerOpen=false;
 function embedInfo(u){
@@ -304,13 +323,13 @@ function openPlayer(it){
     ev.target.textContent=done.has(id)?'✅ تم المذاكرة':'⬜ علّم إنك خلصت';refresh()};
 }
 window.addEventListener('popstate',()=>{if(playerOpen)closePlayer()});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&playerOpen){try{if(history.state&&history.state.pl){history.back();return}}catch(err){}closePlayer()}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){const c=document.getElementById('ch');if(c&&!c.hidden){closeChoice();return}}if(e.key==='Escape'&&playerOpen){try{if(history.state&&history.state.pl){history.back();return}}catch(err){}closePlayer()}});
 
 /* ---------- صف ملف (بيتستخدم في المادة وفي نتايج البحث والمفضلة) ---------- */
 function fileRow(i,showSub){
   const id=String(i.id),d=done.has(id),f=fav.has(id);
   const sn=showSub?subs.find(s=>s.id===i.subject_id):null;
-  return `<div class="f${d?' dn':''}"><button class="chk" data-k="${esc(id)}" title="تم المذاكرة" aria-label="تم المذاكرة">${d?'✅':'⬜'}</button><span class="n">${esc(i.title)}${isNew(i)?' <span class="new">🆕</span>':''}${sn?` <small class="mut">· ${esc(sn.name)}</small>`:''}</span><button class="chk" data-f="${esc(id)}" title="المفضلة" aria-label="المفضلة">${f?'⭐':'☆'}</button>${embedInfo(i.url)?`<button class="btn" data-p="${esc(id)}">${i.kind==='rec'?'▶ تشغيل':'👁 عرض'}</button>`:`<a class="btn" href="${esc(safeUrl(i.url))}" target="_blank" rel="noopener">فتح</a>`}${(aidOf(id)||admin)?`<button class="${aidOf(id)?'btn':'g'}" data-a="${esc(id)}" title="ملخص وأسئلة" aria-label="ملخص وأسئلة">🧠</button>`:''}${admin?`<button class="g" data-e="${esc(id)}">✏️</button><button class="d" data-x="${esc(id)}">حذف</button>`:''}</div>`;
+  return `<div class="f${d?' dn':''}"><button class="chk" data-k="${esc(id)}" title="تم المذاكرة" aria-label="تم المذاكرة">${d?'✅':'⬜'}</button><span class="n">${esc(i.title)}${hasV2(i)?' <small class="mut">· 📄 + 🎬</small>':''}${isNew(i)?' <span class="new">🆕</span>':''}${sn?` <small class="mut">· ${esc(sn.name)}</small>`:''}</span><button class="chk" data-f="${esc(id)}" title="المفضلة" aria-label="المفضلة">${f?'⭐':'☆'}</button>${hasV2(i)?`<button class="btn" data-c="${esc(id)}">📂 فتح</button>`:embedInfo(i.url)?`<button class="btn" data-p="${esc(id)}">${i.kind==='rec'?'▶ تشغيل':'👁 عرض'}</button>`:`<a class="btn" href="${esc(safeUrl(i.url))}" target="_blank" rel="noopener">فتح</a>`}${(aidOf(id)||admin)?`<button class="${aidOf(id)?'btn':'g'}" data-a="${esc(id)}" title="ملخص وأسئلة" aria-label="ملخص وأسئلة">🧠</button>`:''}${admin?`<button class="g" data-e="${esc(id)}">✏️</button><button class="d" data-x="${esc(id)}">حذف</button>`:''}</div>`;
 }
 function refresh(){view==='subject'?fillList():view==='fav'?fillFav():fillRes()}
 function bindFiles(){
@@ -319,6 +338,7 @@ function bindFiles(){
   app.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{
     const k=b.dataset.f;fav.has(k)?fav.delete(k):fav.add(k);saveSet('fav',fav);refresh()});
   app.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{const id=b.dataset.a;if(!aidOf(id)&&admin){curItem=id;aidFrom=view;view='aided';render()}else openAid(id)});
+  app.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{const it=items.find(i=>String(i.id)===b.dataset.c);if(it)openChoice(it)});
   app.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{const it=items.find(i=>String(i.id)===b.dataset.p);if(it)openPlayer(it)});
   if(!admin)return;
   app.querySelectorAll('[data-x]').forEach(b=>b.onclick=async()=>{
@@ -328,9 +348,12 @@ function bindFiles(){
     const it=items.find(i=>String(i.id)===b.dataset.e);if(!it)return;
     const title=prompt('اسم الملف؟',it.title);if(title===null)return;
     const url=prompt('اللينك؟',it.url);if(url===null)return;
+    let u2='';const dual=it.kind==='sec'||!!it.url2;
+    if(dual){const v=prompt('لينك الفيديو (سيبه فاضي لو مفيش)',it.url2||'');if(v===null)return;u2=v.trim()}
     const t=title.trim(),u=url.trim();
-    if(!t||!/^https?:\/\//i.test(u))return alert('اكتب الاسم ولينك صحيح بيبدأ بـ https');
-    const {error}=await sb.from('items').update({title:t,url:u}).eq('id',it.id);error?fail(error):reload()});
+    if(!t||!/^https?:\/\//i.test(u)||(u2&&!/^https?:\/\//i.test(u2)))return alert('اكتب الاسم ولينك صحيح بيبدأ بـ https');
+    const up={title:t,url:u};if(dual&&(u2||it.url2))up.url2=u2||null;
+    const {error}=await sb.from('items').update(up).eq('id',it.id);error?fail(error):reload()});
 }
 
 /* ---------- الصفحة الرئيسية ---------- */
@@ -519,7 +542,7 @@ function subject(){
   <div class="prog" id="prog"></div>
   <div class="tabs"><button data-t="slides" class="${tab==='slides'?'on':''}">🖼 الشرائح${nt('slides')}</button><button data-t="rec" class="${tab==='rec'?'on':''}">🎧 التسجيلات${nt('rec')}</button><button data-t="sec" class="${tab==='sec'?'on':''}">📝 السكاشن${nt('sec')}</button></div>
   ${all.length>=4?`<input id="qs" type="search" dir="auto" placeholder="🔎 ابحث في الملفات…" value="${esc(qs)}" autocomplete="off">`:''}
-  ${admin?`<div class="form"><input id="ti" placeholder="اسم الملف (مثال: محاضرة 1)"><input id="ur" type="url" dir="ltr" placeholder="الصق لينك Drive هنا"><button id="ad">＋ إضافة ${tab==='slides'?'شرائح':tab==='rec'?'تسجيل':'سكشن'}</button></div>`:''}
+  ${admin?`<div class="form"><input id="ti" placeholder="اسم الملف (مثال: محاضرة 1)">${tab==='sec'?'<input id="ur" type="url" dir="ltr" placeholder="لينك الملف (Drive)"><input id="ur2" type="url" dir="ltr" placeholder="لينك الفيديو (اختياري)">':'<input id="ur" type="url" dir="ltr" placeholder="الصق لينك Drive هنا">'}<button id="ad">＋ إضافة ${tab==='slides'?'شرائح':tab==='rec'?'تسجيل':'سكشن'}</button></div>`:''}
   <div id="lst"></div>`;
   fillList();
   const qi=document.getElementById('qs');if(qi)qi.oninput=e=>{qs=e.target.value;fillList()};
@@ -534,9 +557,11 @@ function subject(){
     const {error}=await sb.from('subjects').delete().eq('id',s.id);
     if(error)return fail(error);view='home';reload()};
   document.getElementById('ad').onclick=async()=>{
-    const title=document.getElementById('ti').value.trim(),url=document.getElementById('ur').value.trim();
-    if(!title||!/^https?:\/\//i.test(url))return alert('اكتب الاسم والصق لينك صحيح بيبدأ بـ https');
-    const {error}=await sb.from('items').insert({subject_id:s.id,kind:tab,title,url});error?fail(error):reload()};
+    const title=document.getElementById('ti').value.trim(),u1=document.getElementById('ur').value.trim();
+    const e2=document.getElementById('ur2'),u2=e2?e2.value.trim():'',ok=u=>/^https?:\/\//i.test(u);
+    if(!title||(!u1&&!u2)||(u1&&!ok(u1))||(u2&&!ok(u2)))return alert('اكتب الاسم والصق لينك صحيح بيبدأ بـ https');
+    const row={subject_id:s.id,kind:tab,title,url:u1||u2};if(u1&&u2)row.url2=u2;
+    const {error}=await sb.from('items').insert(row);error?fail(error):reload()};
 }
 
 /* ---------- الإحصائيات (للمالك بس) ---------- */
