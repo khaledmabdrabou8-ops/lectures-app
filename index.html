@@ -33,7 +33,7 @@ button.d{background:transparent;color:#c0392b;border:1px solid var(--bd)}
 .tabs button{flex:1;background:var(--card);color:var(--tx);border:1px solid var(--bd);padding:10px 4px;font-size:14px}
 .tabs button.on{background:var(--ac);color:#fff}
 .f{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px;margin:8px 0;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.f .n{flex:1;word-break:break-word;min-width:50%}
+.f .n{flex:1;word-break:break-word;min-width:38%}
 .empty{text-align:center;color:var(--mut);padding:32px 8px}
 input{font:inherit;width:100%;padding:10px;margin:6px 0;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx)}
 .form{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px;margin:12px 0}
@@ -57,7 +57,7 @@ input{font:inherit;width:100%;padding:10px;margin:6px 0;border:1px solid var(--b
 .st b{display:block;font-size:26px;color:var(--ac)}
 .ic{padding:8px 10px;font-size:18px;line-height:1}
 .chg{width:100%;font-size:13px;margin:-4px 0 12px}
-.qa{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.qa{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
 .qa button{font-size:14px;padding:10px 4px}
 .guide{text-align:center;padding-top:8px}
 .gtop{text-align:start;margin-bottom:8px}
@@ -102,6 +102,34 @@ input{font:inherit;width:100%;padding:10px;margin:6px 0;border:1px solid var(--b
 .plb audio{width:calc(100% - 32px);margin:24px 16px}
 .plf{padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--bd);display:flex;gap:8px}
 .plf button{flex:1}
+textarea,select{font:inherit;width:100%;padding:10px;margin:6px 0;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx)}
+textarea{resize:vertical;line-height:1.7}
+.lbl{display:block;font-size:13px;color:var(--mut);margin:10px 0 2px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{padding:8px 12px;font-size:13px}
+.sumbox h3{font-size:16px;margin:16px 0 6px;color:var(--ac)}
+.sumbox p{line-height:1.9;margin:8px 0}
+.sum{padding-inline-start:22px;line-height:1.9;margin:8px 0}
+.sum li{margin:6px 0}
+.qs{padding:4px 0}
+.qq{font-size:18px;line-height:1.7;margin:16px 0 8px}
+.qo{display:block;width:100%;text-align:start;margin:8px 0;white-space:normal;line-height:1.6}
+.qo.ok{background:#2e7d32;color:#fff;border-color:#2e7d32}
+.qo.bad{background:#c0392b;color:#fff;border-color:#c0392b}
+.fb{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px 12px;margin:10px 0}
+.res{text-align:center}
+.res .big{font-size:56px}
+.res h2{margin:4px 0}
+.wq{text-align:start;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px 12px;margin:8px 0}
+.okt{color:#2e7d32;margin:4px 0}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:28px 16px;min-height:190px;text-align:center;display:flex;flex-direction:column;justify-content:center;gap:10px;cursor:pointer;margin:12px 0;font-size:18px;line-height:1.7}
+.card.back{border-color:var(--ac)}
+.day{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px 12px;margin:8px 0}
+.day.today{border-color:var(--ac);border-width:2px}
+.day h3{margin:0 0 6px;font-size:15px;color:var(--ac)}
+.tk{display:flex;gap:8px;align-items:flex-start;padding:4px 0;line-height:1.7}
+.tk.dn span{opacity:.5;text-decoration:line-through}
+.warn{background:var(--ab);color:var(--at);border:1px solid var(--abd);border-radius:12px;padding:10px 12px;margin:8px 0}
 .credit{text-align:center;color:var(--mut);font-size:13px;padding:8px 16px 28px}
 .credit b{color:var(--ac)}
 </style>
@@ -127,10 +155,13 @@ const GUIDE=[
  {i:'🔎',t:'دوّر بسرعة',p:'استخدم خانة البحث للوصول لأي مادة أو محاضرة. وعلامة 🆕 بتظهر على اللي اتضاف آخر أسبوع.'},
  {i:'✅',t:'نظّم مذاكرتك',p:'علّم ✅ على الملف اللي خلصته، وأضف ⭐ للمفضلة عشان ترجعله بسرعة من زرار المفضلة.'},
  {i:'🎓',t:'احسب معدلك',p:'دخّل ساعات المواد ودرجاتك، وشوف معدلك الفصلي والتراكمي المتوقع.'},
+ {i:'🧠',t:'اختبر نفسك',p:'لو جنب المحاضرة زرار 🧠 يبقى ليها ملخص وأسئلة. اقرا الملخص، وبعدين اختبر نفسك أو راجع بالبطاقات. وكل الملخصات في «🧠 المذاكرة».'},
+ {i:'📅',t:'جدول مذاكرة',p:'ضيف امتحاناتك ومواعيدها، والتطبيق يقسملك المحاضرات المتبقية على الأيام اللي فاضلة.'},
  {i:'📲',t:'ضيفه على شاشتك',p:'أندرويد: من قايمة المتصفح ⋮ اختار «تثبيت التطبيق». آيفون: من Safari اضغط مشاركة ثم «إضافة إلى الشاشة الرئيسية».'}
 ];
-let offline=false,sb,subs=[],items=[],ann='',cur=null,tab='slides',admin=false,view='home',stage=null,term=null,tmpS=null,tmpT=null,q='',qs='',gi=0;
+let offline=false,sb,subs=[],items=[],aids=[],ann='',cur=null,tab='slides',admin=false,view='home',stage=null,term=null,tmpS=null,tmpT=null,q='',qs='',gi=0;
 let done=new Set(),fav=new Set(),seen=false,gp={rows:[],ph:'',pg:''};
+let curItem=null,aidFrom='home',aidTab='sum',qz=null,cd={i:0,f:false},pl={exams:[],perDay:3,off:[5]},plDone=new Set();
 
 /* ---------- تخزين محلي ---------- */
 const ls={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
@@ -178,22 +209,24 @@ function logVisit(){
 
 function setOffline(v){offline=v;const b=document.getElementById('offb');if(b)b.hidden=!v}
 async function load(){
-  let a,b,c;
+  let a,b,c,d;
   try{
-    [a,b,c]=await Promise.all([
+    [a,b,c,d]=await Promise.all([
       sb.from('subjects').select('*').order('created_at'),
       sb.from('items').select('*').order('created_at'),
-      sb.from('announcements').select('body').order('created_at',{ascending:false}).limit(1)]);
-  }catch(e){a=b=c={error:e}}
+      sb.from('announcements').select('body').order('created_at',{ascending:false}).limit(1),
+      sb.from('aids').select('*')]);
+  }catch(e){a=b=c=d={error:e}}
   if(a.error||b.error){
     try{
       const sn=JSON.parse(ls.get('snap')||'null');
-      if(sn&&Array.isArray(sn.subs)&&Array.isArray(sn.items)){subs=sn.subs;items=sn.items;ann=sn.ann||'';setOffline(true);return true}
+      if(sn&&Array.isArray(sn.subs)&&Array.isArray(sn.items)){subs=sn.subs;items=sn.items;ann=sn.ann||'';aids=Array.isArray(sn.aids)?sn.aids:[];setOffline(true);return true}
     }catch(e){}
     app.innerHTML='<p class="empty">تعذّر تحميل البيانات. اتأكد من الاتصال بالإنترنت وجرّب تاني.</p>';return false}
   subs=a.data;items=b.data;
   ann=(!c.error&&c.data&&c.data[0]&&c.data[0].body)||'';
-  ls.set('snap',JSON.stringify({subs,items,ann}));
+  aids=(!d.error&&Array.isArray(d.data))?d.data:[];
+  ls.set('snap',JSON.stringify({subs,items,ann,aids}));
   setOffline(false);return true;
 }
 async function reload(){if(await load())render()}
@@ -201,6 +234,10 @@ function render(){
   if(view==='login')return login();
   if(!seen||view==='guide')return guide();
   if(!stage||!term)return pick();
+  if(view==='aid')return aidView();
+  if(view==='aided'&&admin)return aidEditor();
+  if(view==='hub')return hubView();
+  if(view==='plan')return planView();
   if(view==='stats'&&admin)return stats();
   if(view==='gpa')return gpaView();
   if(view==='fav')return favView();
@@ -271,7 +308,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&playerOpen){try{if(
 function fileRow(i,showSub){
   const id=String(i.id),d=done.has(id),f=fav.has(id);
   const sn=showSub?subs.find(s=>s.id===i.subject_id):null;
-  return `<div class="f${d?' dn':''}"><button class="chk" data-k="${esc(id)}" title="تم المذاكرة" aria-label="تم المذاكرة">${d?'✅':'⬜'}</button><span class="n">${esc(i.title)}${isNew(i)?' <span class="new">🆕</span>':''}${sn?` <small class="mut">· ${esc(sn.name)}</small>`:''}</span><button class="chk" data-f="${esc(id)}" title="المفضلة" aria-label="المفضلة">${f?'⭐':'☆'}</button>${embedInfo(i.url)?`<button class="btn" data-p="${esc(id)}">${i.kind==='rec'?'▶ تشغيل':'👁 عرض'}</button>`:`<a class="btn" href="${esc(safeUrl(i.url))}" target="_blank" rel="noopener">فتح</a>`}${admin?`<button class="g" data-e="${esc(id)}">✏️</button><button class="d" data-x="${esc(id)}">حذف</button>`:''}</div>`;
+  return `<div class="f${d?' dn':''}"><button class="chk" data-k="${esc(id)}" title="تم المذاكرة" aria-label="تم المذاكرة">${d?'✅':'⬜'}</button><span class="n">${esc(i.title)}${isNew(i)?' <span class="new">🆕</span>':''}${sn?` <small class="mut">· ${esc(sn.name)}</small>`:''}</span><button class="chk" data-f="${esc(id)}" title="المفضلة" aria-label="المفضلة">${f?'⭐':'☆'}</button>${embedInfo(i.url)?`<button class="btn" data-p="${esc(id)}">${i.kind==='rec'?'▶ تشغيل':'👁 عرض'}</button>`:`<a class="btn" href="${esc(safeUrl(i.url))}" target="_blank" rel="noopener">فتح</a>`}${(aidOf(id)||admin)?`<button class="${aidOf(id)?'btn':'g'}" data-a="${esc(id)}" title="ملخص وأسئلة" aria-label="ملخص وأسئلة">🧠</button>`:''}${admin?`<button class="g" data-e="${esc(id)}">✏️</button><button class="d" data-x="${esc(id)}">حذف</button>`:''}</div>`;
 }
 function refresh(){view==='subject'?fillList():view==='fav'?fillFav():fillRes()}
 function bindFiles(){
@@ -279,6 +316,7 @@ function bindFiles(){
     const k=b.dataset.k;done.has(k)?done.delete(k):done.add(k);saveSet('done',done);refresh()});
   app.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{
     const k=b.dataset.f;fav.has(k)?fav.delete(k):fav.add(k);saveSet('fav',fav);refresh()});
+  app.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{const id=b.dataset.a;if(!aidOf(id)&&admin){curItem=id;aidFrom=view;view='aided';render()}else openAid(id)});
   app.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{const it=items.find(i=>String(i.id)===b.dataset.p);if(it)openPlayer(it)});
   if(!admin)return;
   app.querySelectorAll('[data-x]').forEach(b=>b.onclick=async()=>{
@@ -330,10 +368,11 @@ function fillRes(){
 }
 function home(){
   const fc=items.filter(i=>fav.has(String(i.id))).length;
-  app.innerHTML=`<div class="bar"><h1>📚 محاضراتي</h1>${thmBtn()}</div>
+  const vsid=new Set(vis().map(s=>String(s.id))),hc=items.filter(i=>vsid.has(String(i.subject_id))&&aidOf(i.id)).length,tp=todayPending();
+  app.innerHTML=`<div class="bar"><h1>📚 محاضراتي</h1><button class="g ic" id="qgd" aria-label="دليل الاستخدام">❓</button>${thmBtn()}</div>
   <button class="g chg" id="chg">${STAGES[stage-1]} · ${TERMS[term]} ⇄</button>
   ${ann?`<div class="ann">📢 ${esc(ann)}</div>`:''}
-  <div class="qa"><button class="g" id="qfav">⭐ المفضلة${fc?' ('+fc+')':''}</button><button class="g" id="qgpa">🎓 المعدل</button><button class="g" id="qgd">❓ الدليل</button></div>
+  <div class="qa"><button class="g" id="qfav">⭐ المفضلة${fc?' ('+fc+')':''}</button><button class="g" id="qhub">🧠 المذاكرة${hc?' ('+hc+')':''}</button><button class="g" id="qplan">📅 جدول المذاكرة${tp?' ('+tp+')':''}</button><button class="g" id="qgpa">🎓 المعدل</button></div>
   ${admin?`<div class="adm"><button class="g" id="annb">📢 ${ann?'تعديل الإعلان':'إضافة إعلان'}</button><button class="g" id="stb">📊 الإحصائيات</button></div>`:''}
   <input id="q" type="search" dir="auto" placeholder="🔎 ابحث عن مادة أو محاضرة…" value="${esc(q)}" autocomplete="off">
   <div id="res"></div>
@@ -344,6 +383,8 @@ function home(){
   document.getElementById('chg').onclick=()=>{clearSel();render()};
   document.getElementById('qfav').onclick=()=>{view='fav';render()};
   document.getElementById('qgpa').onclick=()=>{view='gpa';render()};
+  document.getElementById('qhub').onclick=()=>{view='hub';render()};
+  document.getElementById('qplan').onclick=()=>{view='plan';render()};
   document.getElementById('qgd').onclick=()=>{gi=0;view='guide';render()};
   document.getElementById('lock').onclick=async()=>{
     if(admin){await sb.auth.signOut();admin=false;render()}else{view='login';render()}};
@@ -513,9 +554,304 @@ async function stats(){
   <p class="mut" style="margin-top:16px">الأرقام بتعدّ الأجهزة، مش الأشخاص (الطالب اللي بيفتح من موبايل ولاب بيتحسب مرتين).</p>`;
 }
 
+/* ================= ركن المذاكرة: ملخصات + اختبارات + بطاقات ================= */
+const LET=['أ','ب','ج','د','هـ'];
+const LMAP={'أ':0,'ا':0,'إ':0,'آ':0,'A':0,'ب':1,'B':1,'ج':2,'C':2,'د':3,'D':3,'ه':4,'هـ':4,'E':4};
+const Q_RE=/^(?:س|السؤال|سؤال|Q|Question)\s*\d*\s*[:：]\s*(.+)$/i;
+const O_RE=/^(هـ|[أاإآبجده]|[A-Ea-e])\s*[\)\.\-–]\s*(.+)$/;
+const A_RE=/^(?:ج|الاجابة|الإجابة|الاجابه|الإجابه|الجواب|Answer|Ans)\s*[:：]\s*(.+)$/i;
+const E_RE=/^(?:ش|شرح|التفسير|السبب|Explanation|Exp)\s*[:：]\s*(.+)$/i;
+const AI_PROMPT='لخّص المحاضرة دي في نقاط مركزة (حد أقصى 10 نقاط، وكل نقطة تبدأ بـ "- ")، وبعد كده اكتب 10 أسئلة اختيار من متعدد (MCQ) بالصيغة دي بالظبط ومن غير أي كلام زيادة:\n\nس: نص السؤال\nأ) ...\nب) ...\nج) ...\nد) ...\nج: حرف الإجابة الصح\nش: شرح قصير للإجابة\n\nاكتب الملخص الأول، وبعده الأسئلة مباشرة.';
+const aidOf=id=>aids.find(a=>String(a.item_id)===String(id))||null;
+const hasSum=a=>!!(a&&a.summary&&String(a.summary).trim());
+const hasQuiz=a=>!!(a&&Array.isArray(a.quiz)&&a.quiz.length);
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const normLine=l=>l.replace(/\*\*|__|`/g,'').replace(/^[\s>#*•·▪◦\-–]+/,'').trim();
+function getBest(){try{return JSON.parse(ls.get('best')||'{}')||{}}catch(e){return {}}}
+function saveBest(id,s,t){const b=getBest(),k=String(id),o=b[k];
+  if(!o||s/t>o.s/o.t){b[k]={s,t};ls.set('best',JSON.stringify(b))}}
+
+function ansIndex(c){
+  if(c.ans==null)return null;const v=c.ans.trim();
+  const m=v.match(/^(هـ|[أاإآبجده]|[A-Ea-e])(?:\s*[\)\.\-–:]|\s|$)/);
+  if(m){const k=LMAP[m[1].toUpperCase()];if(k!=null)return k}
+  const i=c.o.findIndex(x=>norm(x)===norm(v));return i>=0?i:null;
+}
+function parseAid(txt){
+  const lines=String(txt||'').replace(/\r/g,'').split('\n');
+  const qi=lines.findIndex(l=>Q_RE.test(normLine(l)));
+  const summary=(qi<0?lines:lines.slice(0,qi)).join('\n').trim();
+  const quiz=[],errs=[];let cur=null,n=0;
+  const push=()=>{
+    if(!cur)return;n++;const a=ansIndex(cur);
+    if(cur.o.length<2)errs.push('سؤال '+n+': محتاج اختيارين على الأقل');
+    else if(a==null||a>=cur.o.length)errs.push('سؤال '+n+': الإجابة الصح مش واضحة');
+    else quiz.push({q:cur.q,o:cur.o,a,e:cur.e||''});
+    cur=null};
+  if(qi>=0)lines.slice(qi).forEach(raw=>{
+    const l=normLine(raw);if(!l)return;let m;
+    if(m=l.match(Q_RE)){push();cur={q:m[1].trim(),o:[],ans:null,e:''};return}
+    if(!cur)return;
+    if(m=l.match(A_RE)){cur.ans=m[1].trim();return}
+    if(m=l.match(E_RE)){cur.e=m[1].trim();return}
+    if(m=l.match(O_RE)){cur.o.push(m[2].trim());return}
+    if(cur.e)cur.e+=' '+l;else if(cur.o.length)cur.o[cur.o.length-1]+=' '+l;else cur.q+=' '+l;
+  });
+  push();
+  return {summary,quiz,errs};
+}
+function aidToText(a){
+  let t=a&&a.summary?String(a.summary).trim():'';
+  if(hasQuiz(a)){
+    const qs=a.quiz.map(q=>'س: '+q.q+'\n'+q.o.map((o,k)=>(LET[k]||'؟')+') '+o).join('\n')+'\nج: '+LET[q.a]+(q.e?'\nش: '+q.e:'')).join('\n\n');
+    t+=(t?'\n\n':'')+qs;
+  }
+  return t;
+}
+function mdLite(t){
+  let h='',ul=false;const f=x=>esc(x).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');
+  const close=()=>{if(ul){h+='</ul>';ul=false}};
+  String(t||'').split('\n').forEach(raw=>{
+    const l=raw.trim();let m;
+    if(!l){close();return}
+    if(m=l.match(/^[-•*▪◦]\s+(.+)$/)){if(!ul){h+='<ul class="sum">';ul=true}h+='<li>'+f(m[1])+'</li>';return}
+    close();
+    if(m=l.match(/^#{1,3}\s*(.+)$/)){h+='<h3>'+f(m[1])+'</h3>';return}
+    h+='<p>'+f(l)+'</p>';
+  });
+  close();return h;
+}
+function openAid(id,from){curItem=String(id);aidFrom=from||view;aidTab='sum';qz=null;cd={i:0,f:false};view='aid';render()}
+
+function aidView(){
+  const it=items.find(i=>String(i.id)===String(curItem));
+  if(!it){view='home';return render()}
+  const a=aidOf(it.id),hs=hasSum(a),hq=hasQuiz(a);
+  if(aidTab==='sum'&&!hs&&hq)aidTab='quiz';
+  if((aidTab==='quiz'||aidTab==='cards')&&!hq)aidTab='sum';
+  app.innerHTML=`<div class="bar"><button class="g" id="back">→</button><h1>${esc(it.title)}</h1>${admin?'<button class="g" id="aed">✏️</button>':''}</div>
+  <div class="tabs">${hs?`<button data-at="sum" class="${aidTab==='sum'?'on':''}">📄 الملخص</button>`:''}${hq?`<button data-at="quiz" class="${aidTab==='quiz'?'on':''}">❓ اختبر نفسك</button><button data-at="cards" class="${aidTab==='cards'?'on':''}">🃏 بطاقات</button>`:''}</div>
+  <div id="abody"></div>`;
+  document.getElementById('back').onclick=()=>{view=aidFrom||'home';render()};
+  if(admin)document.getElementById('aed').onclick=()=>{view='aided';render()};
+  app.querySelectorAll('[data-at]').forEach(b=>b.onclick=()=>{aidTab=b.dataset.at;qz=null;cd={i:0,f:false};aidView()});
+  const box=document.getElementById('abody');
+  if(!hs&&!hq){box.innerHTML='<p class="empty">لسه مفيش ملخص أو أسئلة للمحاضرة دي.</p>';return}
+  if(aidTab==='sum')box.innerHTML='<div class="sumbox">'+mdLite(a.summary)+'</div>'+(hq?'<button class="go" id="gq" style="width:100%;margin-top:16px">❓ اختبر نفسك على المحاضرة</button>':'');
+  else if(aidTab==='quiz')fillQuiz(a,it);
+  else fillCards(a);
+  const gq=document.getElementById('gq');if(gq)gq.onclick=()=>{aidTab='quiz';aidView()};
+}
+function fillQuiz(a,it){
+  const box=document.getElementById('abody'),Q=a.quiz;
+  if(!qz){
+    const b=getBest()[String(it.id)];
+    box.innerHTML=`<div class="qs res"><div class="big">❓</div><p>${Q.length} سؤال اختيار من متعدد. اختار الإجابة وهتشوف الصح فوراً.</p>${b?`<p class="mut">أفضل نتيجة ليك: <b>${b.s} / ${b.t}</b></p>`:''}<button class="go" id="qstart" style="width:100%">ابدأ الاختبار</button></div>`;
+    document.getElementById('qstart').onclick=()=>{qz={ord:shuffle(Q.map((_,i)=>i)),i:0,score:0,sel:null,wrong:[],mode:'all'};fillQuiz(a,it)};
+    return;
+  }
+  if(qz.i>=qz.ord.length){
+    const tot=qz.ord.length,pct=Math.round(qz.score/tot*100);
+    if(qz.mode==='all'&&!qz.saved){qz.saved=true;saveBest(it.id,qz.score,tot)}
+    box.innerHTML=`<div class="qs res"><div class="big">${pct>=80?'🎉':pct>=50?'👍':'💪'}</div><h2>${qz.score} / ${tot}</h2><p class="mut">${pct}%</p>
+      ${qz.wrong.length?`<button id="qwr" style="width:100%;margin:6px 0">🔁 أعيد الأسئلة اللي غلطت فيها (${qz.wrong.length})</button>`:''}
+      <button class="g" id="qall" style="width:100%;margin:6px 0">من الأول</button>
+      ${qz.wrong.length?'<h3 class="rh">الأسئلة اللي غلطت فيها</h3>'+qz.wrong.map(i=>`<div class="wq"><b>${esc(Q[i].q)}</b><div class="okt">✅ ${esc(Q[i].o[Q[i].a])}</div>${Q[i].e?`<small class="mut">${esc(Q[i].e)}</small>`:''}</div>`).join(''):''}</div>`;
+    const w=document.getElementById('qwr');
+    if(w)w.onclick=()=>{qz={ord:shuffle(qz.wrong),i:0,score:0,sel:null,wrong:[],mode:'wrong'};fillQuiz(a,it)};
+    document.getElementById('qall').onclick=()=>{qz=null;fillQuiz(a,it)};
+    return;
+  }
+  const qi=qz.ord[qz.i],q=Q[qi];
+  box.innerHTML=`<div class="qs"><div class="pt"><span>سؤال ${qz.i+1} من ${qz.ord.length}</span><b>✅ ${qz.score}</b></div><div class="pbar"><i style="width:${Math.round(qz.i/qz.ord.length*100)}%"></i></div>
+    <h2 class="qq">${esc(q.q)}</h2>${q.o.map((o,k)=>`<button class="opt qo" data-o="${k}">${esc(o)}</button>`).join('')}<div id="qfb"></div></div>`;
+  box.querySelectorAll('.qo').forEach(b=>b.onclick=()=>{
+    if(qz.sel!=null)return;const k=+b.dataset.o;qz.sel=k;
+    box.querySelectorAll('.qo').forEach(x=>{const j=+x.dataset.o;if(j===q.a)x.classList.add('ok');else if(j===k)x.classList.add('bad')});
+    if(k===q.a)qz.score++;else qz.wrong.push(qi);
+    const last=qz.i===qz.ord.length-1;
+    document.getElementById('qfb').innerHTML=`<div class="fb">${k===q.a?'🎉 إجابة صح!':'❌ الإجابة الصح: <b>'+esc(q.o[q.a])+'</b>'}${q.e?`<p class="mut" style="margin:6px 0 0">${esc(q.e)}</p>`:''}</div><button id="qnx" style="width:100%">${last?'شوف النتيجة':'التالي'}</button>`;
+    document.getElementById('qnx').onclick=()=>{qz.i++;qz.sel=null;fillQuiz(a,it)};
+  });
+}
+function fillCards(a){
+  const box=document.getElementById('abody'),Q=a.quiz,q=Q[cd.i];
+  box.innerHTML=`<div class="pt"><span>بطاقة ${cd.i+1} من ${Q.length}</span></div>
+  <div class="card${cd.f?' back':''}" id="card">${cd.f?`<small class="mut">الإجابة</small><b>${esc(q.o[q.a])}</b>${q.e?`<small class="mut">${esc(q.e)}</small>`:''}`:`<small class="mut">السؤال</small><b>${esc(q.q)}</b><small class="mut">اضغط لإظهار الإجابة</small>`}</div>
+  <div class="gnav"><button class="g" id="cp"${cd.i?'':' disabled'}>السابق</button><button id="cn"${cd.i<Q.length-1?'':' disabled'}>التالي</button></div>`;
+  document.getElementById('card').onclick=()=>{cd.f=!cd.f;fillCards(a)};
+  document.getElementById('cp').onclick=()=>{if(cd.i>0){cd.i--;cd.f=false;fillCards(a)}};
+  document.getElementById('cn').onclick=()=>{if(cd.i<Q.length-1){cd.i++;cd.f=false;fillCards(a)}};
+}
+function aidEditor(){
+  const it=items.find(i=>String(i.id)===String(curItem));
+  if(!it){view='home';return render()}
+  const a=aidOf(it.id);
+  app.innerHTML=`<div class="bar"><button class="g" id="back">→</button><h1>🧠 ${esc(it.title)}</h1></div>
+  <p class="mut">الصق هنا الملخص والأسئلة اللي طلعت من الـ AI. اللي قبل أول «س:» بيتحسب ملخص، والباقي أسئلة.</p>
+  <div class="adm"><button class="g" id="cpp">📋 انسخ البرومبت للـ AI</button></div>
+  <textarea id="aid" dir="auto" rows="16" placeholder="- نقطة مهمة 1&#10;- نقطة مهمة 2&#10;&#10;س: نص السؤال&#10;أ) ...&#10;ب) ...&#10;ج) ...&#10;د) ...&#10;ج: ب&#10;ش: شرح قصير">${esc(aidToText(a))}</textarea>
+  <div id="aidchk" class="mut" style="margin:6px 0"></div>
+  <div class="adm"><button id="asave">💾 حفظ</button>${a?'<button class="d" id="adel">🗑 حذف</button>':''}</div>`;
+  const ta=document.getElementById('aid'),chk=document.getElementById('aidchk');
+  const upd=()=>{const r=parseAid(ta.value);
+    chk.innerHTML='ملخص: '+(r.summary?'✅':'—')+' · أسئلة متفهمة: <b>'+r.quiz.length+'</b>'+(r.errs.length?'<br>⚠️ '+r.errs.map(esc).join('<br>⚠️ '):'')};
+  ta.oninput=upd;upd();
+  document.getElementById('back').onclick=()=>{view=aidFrom||'subject';if(view==='aided')view='subject';render()};
+  document.getElementById('cpp').onclick=async()=>{
+    try{await navigator.clipboard.writeText(AI_PROMPT);alert('اتنسخ ✅ الصقه في أي AI مع نص المحاضرة.')}
+    catch(e){prompt('انسخ البرومبت ده:',AI_PROMPT)}};
+  document.getElementById('asave').onclick=async()=>{
+    const r=parseAid(ta.value);
+    if(!r.summary&&!r.quiz.length)return alert('مفيش ملخص ولا أسئلة متفهمة.');
+    if(r.errs.length&&!confirm('فيه أسئلة فيها مشاكل وهتتتجاهل:\n'+r.errs.join('\n')+'\nتكمّل؟'))return;
+    const {error}=await sb.from('aids').upsert({item_id:String(it.id),subject_id:String(it.subject_id),summary:r.summary,quiz:r.quiz,updated_at:new Date().toISOString()},{onConflict:'item_id'});
+    if(error)return fail(error);
+    aidFrom=aidFrom==='aided'?'subject':aidFrom;view='aid';reload()};
+  const del=document.getElementById('adel');
+  if(del)del.onclick=async()=>{
+    if(!confirm('حذف الملخص والأسئلة؟'))return;
+    const {error}=await sb.from('aids').delete().eq('item_id',String(it.id));
+    if(error)return fail(error);view='subject';reload()};
+}
+function hubView(){
+  const vm=new Map(vis().map(s=>[String(s.id),s]));
+  const list=items.filter(i=>vm.has(String(i.subject_id))&&aidOf(i.id));
+  app.innerHTML=`<div class="bar"><button class="g" id="back">→</button><h1>🧠 ركن المذاكرة</h1></div>
+  ${list.length?list.map(i=>{const a=aidOf(i.id),b=getBest()[String(i.id)];
+    return `<div class="f" data-h="${esc(i.id)}" style="cursor:pointer"><span class="n">${esc(i.title)} <small class="mut">· ${esc(vm.get(String(i.subject_id)).name)}</small></span><small class="mut">${hasSum(a)?'📄 ':''}${hasQuiz(a)?'❓ '+a.quiz.length:''}${b?' · 🏆 '+b.s+'/'+b.t:''}</small></div>`}).join(''):'<p class="empty">لسه مفيش ملخصات أو أسئلة لمرحلتك وترمك.</p>'}`;
+  document.getElementById('back').onclick=()=>{view='home';render()};
+  app.querySelectorAll('[data-h]').forEach(r=>r.onclick=()=>openAid(r.dataset.h,'hub'));
+}
+
+/* ================= جدول المذاكرة ================= */
+const DAYN=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+const pad2=n=>String(n).padStart(2,'0');
+const ymd=d=>d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate());
+const pdate=s=>{const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(s||'');return m?new Date(+m[1],+m[2]-1,+m[3]):null};
+const addDays=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x};
+const today0=()=>{const d=new Date();return new Date(d.getFullYear(),d.getMonth(),d.getDate())};
+const diffDays=(a,b)=>Math.round((b-a)/864e5);
+function loadPlan(){
+  try{const v=JSON.parse(ls.get('plan')||'null');
+    if(v&&Array.isArray(v.exams))pl={
+      exams:v.exams.slice(0,20).map(e=>({id:String(e.id),name:String(e.name||''),date:String(e.date||''),sid:e.sid?String(e.sid):'',n:+e.n||0})),
+      perDay:Math.min(20,Math.max(1,+v.perDay||3)),
+      off:Array.isArray(v.off)?v.off.filter(x=>x>=0&&x<=6):[5]}}catch(e){}
+}
+const savePlan=()=>ls.set('plan',JSON.stringify(pl));
+function lecturesOf(e){
+  if(e.sid){
+    let its=items.filter(i=>String(i.subject_id)===e.sid&&i.kind==='slides');
+    if(!its.length)its=items.filter(i=>String(i.subject_id)===e.sid);
+    if(its.length)return its.filter(i=>!done.has(String(i.id))).map(i=>i.title);
+  }
+  return Array.from({length:e.n||0},(_,k)=>'محاضرة '+(k+1));
+}
+function schedule(mode){
+  const t0=today0();
+  const ex=pl.exams.map(e=>({e,D:pdate(e.date),L:lecturesOf(e).slice()})).filter(x=>x.D&&x.D>t0).sort((a,b)=>a.D-b.D);
+  if(!ex.length)return {days:[],short:[],ex};
+  const n=diffDays(t0,ex[ex.length-1].D),days=[];
+  for(let k=0;k<n;k++){const d=addDays(t0,k);days.push({d,s:ymd(d),cap:pl.off.includes(d.getDay())?0:pl.perDay,tasks:[],rev:[]})}
+  ex.forEach(x=>{
+    const k=diffDays(t0,x.D)-1;
+    if(k>0){x.end=k-1;days[k].rev.push(x.e);days[k].cap=Math.max(0,days[k].cap-1)}else x.end=0;
+  });
+  days.forEach((day,k)=>{
+    let cap=day.cap;
+    while(cap>0){
+      const c=ex.filter(x=>x.L.length&&x.end>=k);if(!c.length)break;
+      const u=x=>{let z=cap;for(let j=k+1;j<=x.end;j++)z+=days[j].cap;return x.L.length/Math.max(1,z)};
+      const pick=mode==='edf'?c[0]:c.reduce((b,x)=>u(x)>u(b)+1e-9?x:b,c[0]);
+      let t=day.tasks.find(t=>t.e===pick.e);
+      if(!t){t={e:pick.e,names:[]};day.tasks.push(t)}
+      t.names.push(pick.L.shift());cap--;
+    }
+  });
+  return {days,short:ex.filter(x=>x.L.length).map(x=>({e:x.e,n:x.L.length})),ex};
+}
+function bestSchedule(){
+  const a=schedule('mix'),b=schedule('edf'),s=r=>r.short.reduce((z,x)=>z+x.n,0);
+  return s(b)<s(a)?b:a;
+}
+const tkey=(day,e,rev)=>day.s+'|'+e.id+(rev?'|rev':'');
+function todayPending(){
+  if(!pl.exams.length)return 0;
+  const r=bestSchedule(),d=r.days[0];if(!d)return 0;
+  return d.tasks.filter(t=>!plDone.has(tkey(d,t.e))).length+d.rev.filter(e=>!plDone.has(tkey(d,e,1))).length;
+}
+function dayLabel(k,d){return (k===0?'النهارده':k===1?'بكرة':DAYN[d.getDay()])+' · '+d.getDate()+'/'+(d.getMonth()+1)}
+function planHtml(){
+  if(!pl.exams.length)return '<p class="empty">ضيف امتحاناتك ومواعيدها، وهتظهرلك الخطة هنا.</p>';
+  const r=bestSchedule();
+  if(!r.ex.length)return '<p class="empty">كل الامتحانات اللي ضفتها فاتت أو النهارده. ضيف امتحان جديد.</p>';
+  const warn=r.short.map(x=>`<div class="warn">⚠️ مش هتلحق ${x.n} محاضرة من <b>${esc(x.e.name)}</b> قبل الامتحان. زوّد عدد المحاضرات في اليوم أو قلّل أيام الراحة.</div>`).join('');
+  const total=r.days.reduce((z,d)=>z+d.tasks.reduce((y,t)=>y+t.names.length,0),0);
+  const rows=r.days.map((d,k)=>({d,k})).filter(x=>x.d.tasks.length||x.d.rev.length).map(({d,k})=>{
+    const tk=d.tasks.map(t=>{const key=tkey(d,t.e),dn=plDone.has(key);
+      return `<div class="tk${dn?' dn':''}"><button class="chk" data-pk="${esc(key)}">${dn?'✅':'⬜'}</button><span>📖 <b>${esc(t.e.name)}</b>: ${t.names.map(esc).join('، ')}</span></div>`}).join('');
+    const rv=d.rev.map(e=>{const key=tkey(d,e,1),dn=plDone.has(key);
+      return `<div class="tk${dn?' dn':''}"><button class="chk" data-pk="${esc(key)}">${dn?'✅':'⬜'}</button><span>🔁 مراجعة <b>${esc(e.name)}</b> (الامتحان بعد يوم)</span></div>`}).join('');
+    return `<div class="day${k===0?' today':''}"><h3>${dayLabel(k,d.d)}</h3>${tk}${rv}</div>`}).join('');
+  return warn+`<p class="mut" style="margin:4px 0 8px">${total} محاضرة متبقية موزعة على الأيام. علّم ✅ على المحاضرة في المادة نفسها وهتتحدّث الخطة.</p>`+(rows||'<p class="empty">مفيش مهام جديدة.</p>');
+}
+function examsHtml(){
+  if(!pl.exams.length)return '<p class="mut">لسه مضفتش امتحانات.</p>';
+  const t0=today0();
+  return pl.exams.slice().sort((a,b)=>String(a.date).localeCompare(b.date)).map(e=>{
+    const D=pdate(e.date),left=D?diffDays(t0,D):null,n=lecturesOf(e).length;
+    return `<div class="f"><span class="n"><b>${esc(e.name)}</b> <small class="mut">· ${D?D.getDate()+'/'+(D.getMonth()+1):'—'} · ${left==null?'':left>0?'باقي '+left+' يوم':left===0?'النهارده':'فات'} · ${n} محاضرة متبقية</small></span><button class="d" data-xe="${esc(e.id)}">✕</button></div>`}).join('');
+}
+function planView(){
+  app.innerHTML=`<div class="bar"><button class="g" id="back">→</button><h1>📅 جدول المذاكرة</h1></div>
+  <div class="form"><b>إعداداتك</b>
+    <label class="lbl">عدد المحاضرات اللي تقدر تذاكرها في اليوم</label>
+    <input id="ppd" type="number" min="1" max="20" inputmode="numeric" value="${pl.perDay}">
+    <label class="lbl">أيام الراحة (من غير محاضرات جديدة)</label>
+    <div class="chips">${[6,0,1,2,3,4,5].map(d=>`<button class="opt chip${pl.off.includes(d)?' on':''}" data-off="${d}">${DAYN[d]}</button>`).join('')}</div></div>
+  <h2 class="rh">الامتحانات</h2><div id="exl"></div>
+  <div class="form"><b>＋ إضافة امتحان</b>
+    <select id="exs"><option value="">اختار المادة…</option>${vis().map(s=>`<option value="${esc(s.id)}">${esc(s.name)}</option>`).join('')}<option value="_">مادة تانية (اكتب اسمها)</option></select>
+    <input id="exn" placeholder="اسم المادة" hidden>
+    <input id="exd" type="date" dir="ltr" min="${ymd(addDays(today0(),1))}">
+    <input id="exc" type="number" min="1" max="200" inputmode="numeric" placeholder="عدد المحاضرات (لمادة مش في التطبيق)">
+    <button id="exa">إضافة</button></div>
+  <h2 class="rh">خطتك</h2><div id="plan"></div>`;
+  const fill=()=>{
+    document.getElementById('exl').innerHTML=examsHtml();
+    document.getElementById('plan').innerHTML=planHtml();
+    app.querySelectorAll('[data-xe]').forEach(b=>b.onclick=()=>{
+      if(!confirm('حذف الامتحان؟'))return;
+      pl.exams=pl.exams.filter(e=>e.id!==b.dataset.xe);savePlan();fill()});
+    app.querySelectorAll('[data-pk]').forEach(b=>b.onclick=()=>{
+      const k=b.dataset.pk;plDone.has(k)?plDone.delete(k):plDone.add(k);saveSet('plandone',plDone);fill()});
+  };
+  document.getElementById('back').onclick=()=>{view='home';render()};
+  document.getElementById('ppd').oninput=e=>{const v=Math.min(20,Math.max(1,parseInt(toEn(e.target.value))||1));pl.perDay=v;savePlan();fill()};
+  app.querySelectorAll('[data-off]').forEach(b=>b.onclick=()=>{
+    const d=+b.dataset.off;pl.off=pl.off.includes(d)?pl.off.filter(x=>x!==d):pl.off.concat(d);savePlan();b.classList.toggle('on');fill()});
+  const sel=document.getElementById('exs');
+  sel.onchange=()=>{document.getElementById('exn').hidden=sel.value!=='_'};
+  document.getElementById('exa').onclick=()=>{
+    const sv=sel.value;if(!sv)return alert('اختار المادة الأول.');
+    const date=document.getElementById('exd').value,D=pdate(date);
+    if(!D||D<=today0())return alert('اختار تاريخ امتحان جاي (من بكرة).');
+    let name,sid='';
+    if(sv==='_'){name=document.getElementById('exn').value.trim();if(!name)return alert('اكتب اسم المادة.')}
+    else{const s=subs.find(x=>String(x.id)===sv);name=s?s.name:'مادة';sid=sv}
+    const n=parseInt(toEn(document.getElementById('exc').value))||0;
+    const e={id:Date.now().toString(36)+Math.random().toString(36).slice(2,5),name,date,sid,n};
+    if(!lecturesOf(e).length)return alert('المادة دي مفيهاش ملفات في التطبيق. اكتب عدد المحاضرات.');
+    pl.exams.push(e);savePlan();
+    sel.value='';document.getElementById('exn').hidden=true;document.getElementById('exn').value='';document.getElementById('exd').value='';document.getElementById('exc').value='';
+    fill()};
+  fill();
+}
+
 (async()=>{
   try{
-    loadSel();loadGpa();done=loadSet('done');fav=loadSet('fav');seen=ls.get('seen')==='1';
+    loadSel();loadGpa();loadPlan();plDone=loadSet('plandone');done=loadSet('done');fav=loadSet('fav');seen=ls.get('seen')==='1';
     sb=supabase.createClient(SB_URL,SB_KEY);
     try{const {data}=await sb.auth.getSession();admin=!!(data&&data.session)}catch(e){admin=false}
     if(await load()){render();logVisit()}
