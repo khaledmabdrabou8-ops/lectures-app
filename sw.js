@@ -1,6 +1,6 @@
 /* Service Worker — محاضراتي (العمل بدون إنترنت)
-   لو غيّرت أي حاجة هنا، زوّد رقم النسخة (v1 → v2) عشان الأجهزة تحدّث نفسها. */
-const V = 'mohadarati-v1';
+   لو غيّرت أي حاجة هنا، زوّد رقم النسخة (v2 → v3) عشان الأجهزة تحدّث نفسها. */
+const V = 'mohadarati-v2';
 const SHELL = ['./', 'index.html', 'manifest.webmanifest', 'favicon.png',
   'icon-192.png', 'icon-512.png', 'icon-maskable-512.png', 'apple-touch-icon.png'];
 const LIB = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js';
