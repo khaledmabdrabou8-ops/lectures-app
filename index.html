@@ -28,7 +28,7 @@ button.d{background:transparent;color:#c0392b;border:1px solid var(--bd)}
 .bar{display:flex;align-items:center;gap:8px;margin-bottom:12px}
 .bar h1{flex:1;margin:0}
 .tabs{display:flex;gap:8px;margin:12px 0}
-.tabs button{flex:1;background:var(--card);color:var(--tx);border:1px solid var(--bd)}
+.tabs button{flex:1;background:var(--card);color:var(--tx);border:1px solid var(--bd);padding:10px 4px;font-size:14px}
 .tabs button.on{background:var(--ac);color:#fff}
 .f{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px;margin:8px 0;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .f .n{flex:1;word-break:break-word;min-width:50%}
@@ -36,17 +36,32 @@ button.d{background:transparent;color:#c0392b;border:1px solid var(--bd)}
 input{font:inherit;width:100%;padding:10px;margin:6px 0;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx)}
 .form{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px;margin:12px 0}
 .foot{text-align:center;margin-top:28px}
+.opt{background:var(--card);color:var(--tx);border:1px solid var(--bd);padding:14px 10px}
+.opt.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+.pick h2{font-size:16px;margin:20px 0 10px}
+.pick .go{width:100%;margin-top:24px;padding:14px;font-weight:700}
+.pick .go[disabled]{opacity:.45;cursor:not-allowed}
+.credit{text-align:center;color:var(--mut);font-size:13px;padding:8px 16px 28px}
+.credit b{color:var(--ac)}
 </style>
 </head>
 <body>
 <main id="app"><p class="empty">جاري التحميل…</p></main>
+<footer class="credit">صُنع بحب بواسطة <b>خالد</b> ✨</footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script>
 <script>
 const SB_URL='https://lszsgcnczlmtmowgxloe.supabase.co';
 const SB_KEY='sb_publishable_sfb-DUhH5uxy-Zd8LMLxFA_mpMoSNTS';
 const COLORS=['#2f6f5e','#b5523b','#3b6bb5','#8a5bb5','#b58a2f','#c0457a'];
 const app=document.getElementById('app');
-let sb,subs=[],items=[],cur=null,tab='slides',admin=false,view='home';
+const STAGES=['المرحلة الأولى','المرحلة الثانية','المرحلة الثالثة','المرحلة الرابعة','المرحلة الخامسة'];
+const TERMS={1:'الترم الأول',2:'الترم الثاني'};
+let sb,subs=[],items=[],cur=null,tab='slides',admin=false,view='home',stage=null,term=null,tmpS=null,tmpT=null;
+function loadSel(){try{const v=JSON.parse(localStorage.getItem('sel')||'null');
+  if(v&&v.stage>=1&&v.stage<=STAGES.length&&(v.term===1||v.term===2)){stage=v.stage;term=v.term}}catch(e){}}
+function saveSel(){try{localStorage.setItem('sel',JSON.stringify({stage,term}))}catch(e){}}
+function clearSel(){try{localStorage.removeItem('sel')}catch(e){}stage=term=tmpS=tmpT=null}
+const vis=()=>subs.filter(s=>s.stage===stage&&s.term===term);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const safeUrl=u=>/^https?:\/\//i.test(u)?u:'#';
 const fail=e=>alert('حصلت مشكلة: '+(e&&e.message?e.message:e));
@@ -61,25 +76,40 @@ async function load(){
 async function reload(){if(await load())render()}
 function render(){
   if(view==='login')return login();
+  if(!stage||!term)return pick();
   if(view==='subject'&&subs.find(s=>s.id===cur))return subject();
   view='home';home();
 }
 
 function home(){
-  app.innerHTML='<h1>📚 محاضراتي</h1><div class="grid">'+subs.map(s=>{
+  app.innerHTML='<div class="bar"><h1>📚 محاضراتي</h1><button class="g" id="chg" style="font-size:13px">'+STAGES[stage-1]+' · '+TERMS[term]+' ⇄</button></div><div class="grid">'+vis().map(s=>{
     const n=items.filter(i=>i.subject_id===s.id).length;
     return `<div class="sub" style="--c:${esc(s.color||'#2f6f5e')}" data-id="${esc(s.id)}"><b>${esc(s.name)}</b><small>${n} ملف</small></div>`}).join('')+
     (admin?'<div class="sub add" id="addsub">＋ مادة جديدة</div>':'')+'</div>'+
-    (subs.length?'':'<p class="empty">لسه مفيش مواد.</p>')+
+    (vis().length?'':'<p class="empty">لسه مفيش مواد في المرحلة والترم دول.</p>')+
     `<div class="foot"><button class="g" id="lock">${admin?'تسجيل الخروج':'🔒 دخول صاحب التطبيق'}</button></div>`;
   app.querySelectorAll('.sub[data-id]').forEach(e=>e.onclick=()=>{cur=e.dataset.id;view='subject';render()});
+  document.getElementById('chg').onclick=()=>{clearSel();render()};
   const a=document.getElementById('addsub');
   if(a)a.onclick=async()=>{
     const name=prompt('اسم المادة؟');if(!name||!name.trim())return;
-    const {error}=await sb.from('subjects').insert({name:name.trim(),color:COLORS[subs.length%COLORS.length]});
+    const {error}=await sb.from('subjects').insert({name:name.trim(),color:COLORS[subs.length%COLORS.length],stage,term});
     error?fail(error):reload()};
   document.getElementById('lock').onclick=async()=>{
     if(admin){await sb.auth.signOut();admin=false;render()}else{view='login';render()}};
+}
+
+function pick(){
+  app.innerHTML=`<div class="pick"><h1>📚 محاضراتي</h1><p class="mut">اختار مرحلتك الدراسية والترم عشان تشوف محاضراتك.</p>
+  <h2>المرحلة</h2><div class="grid">${STAGES.map((n,i)=>`<button class="opt${tmpS===i+1?' on':''}" data-s="${i+1}">${n}</button>`).join('')}</div>
+  <h2>الترم</h2><div class="tabs"><button class="opt${tmpT===1?' on':''}" data-t="1">${TERMS[1]}</button><button class="opt${tmpT===2?' on':''}" data-t="2">${TERMS[2]}</button></div>
+  <button class="go" id="go"${tmpS&&tmpT?'':' disabled'}>دخول</button>
+  <div class="foot"><button class="g" id="lock">${admin?'تسجيل الخروج':'🔒 دخول صاحب التطبيق'}</button></div></div>`;
+  app.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{tmpS=+b.dataset.s;pick()});
+  app.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{tmpT=+b.dataset.t;pick()});
+  document.getElementById('go').onclick=()=>{if(!tmpS||!tmpT)return;stage=tmpS;term=tmpT;saveSel();view='home';render()};
+  document.getElementById('lock').onclick=async()=>{
+    if(admin){await sb.auth.signOut();admin=false;pick()}else{view='login';render()}};
 }
 
 function login(){
@@ -96,8 +126,8 @@ function subject(){
   const s=subs.find(x=>x.id===cur);
   const list=items.filter(i=>i.subject_id===cur&&i.kind===tab);
   app.innerHTML=`<div class="bar"><button class="g" id="back">→</button><h1>${esc(s.name)}</h1>${admin?'<button class="g" id="ren">✏️</button><button class="d" id="del">🗑</button>':''}</div>
-  <div class="tabs"><button data-t="slides" class="${tab==='slides'?'on':''}">🖼 الشرائح</button><button data-t="rec" class="${tab==='rec'?'on':''}">🎧 التسجيلات</button></div>
-  ${admin?`<div class="form"><input id="ti" placeholder="اسم الملف (مثال: محاضرة 1)"><input id="ur" type="url" dir="ltr" placeholder="الصق لينك Drive هنا"><button id="ad">＋ إضافة ${tab==='slides'?'شرائح':'تسجيل'}</button></div>`:''}
+  <div class="tabs"><button data-t="slides" class="${tab==='slides'?'on':''}">🖼 الشرائح</button><button data-t="rec" class="${tab==='rec'?'on':''}">🎧 التسجيلات</button><button data-t="sec" class="${tab==='sec'?'on':''}">📝 السكاشن</button></div>
+  ${admin?`<div class="form"><input id="ti" placeholder="اسم الملف (مثال: محاضرة 1)"><input id="ur" type="url" dir="ltr" placeholder="الصق لينك Drive هنا"><button id="ad">＋ إضافة ${tab==='slides'?'شرائح':tab==='rec'?'تسجيل':'سكشن'}</button></div>`:''}
   <div>${list.length?list.map(i=>`<div class="f"><span class="n">${esc(i.title)}</span><a class="btn" href="${esc(safeUrl(i.url))}" target="_blank" rel="noopener">فتح</a>${admin?`<button class="d" data-x="${esc(i.id)}">حذف</button>`:''}</div>`).join(''):'<p class="empty">لسه مفيش ملفات هنا.</p>'}</div>`;
   document.getElementById('back').onclick=()=>{view='home';render()};
   app.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{tab=b.dataset.t;render()});
@@ -120,6 +150,7 @@ function subject(){
 
 (async()=>{
   try{
+    loadSel();
     sb=supabase.createClient(SB_URL,SB_KEY);
     const {data}=await sb.auth.getSession();admin=!!(data&&data.session);
     if(await load())render();
