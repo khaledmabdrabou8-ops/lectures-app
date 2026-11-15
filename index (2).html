@@ -1,0 +1,1035 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2f6f5e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="محاضراتي">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>محاضراتي</title>
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<style>
+:root{--bg:#f6f5f1;--card:#fff;--tx:#1d1d1b;--mut:#6b6b66;--ac:#2f6f5e;--bd:#e3e1da;--ab:#fff7e0;--at:#5b4a12;--abd:#ecd9a0;--nw:#b5523b;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#161615;--card:#212120;--tx:#f0efe9;--mut:#a09f98;--ac:#6fc2a9;--bd:#33332f;--ab:#3a3318;--at:#f3e6b0;--abd:#5a4e22;--nw:#f0907a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#161615;--card:#212120;--tx:#f0efe9;--mut:#a09f98;--ac:#6fc2a9;--bd:#33332f;--ab:#3a3318;--at:#f3e6b0;--abd:#5a4e22;--nw:#f0907a;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,"Segoe UI",Tahoma,sans-serif;min-height:100vh;padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0)}
+main{max-width:640px;margin:0 auto;padding:16px}
+h1{font-size:22px;margin:8px 0 16px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.sub{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px 12px;cursor:pointer;border-top:5px solid var(--c);min-height:84px}
+.sub b{display:block;font-size:17px;margin-bottom:6px}
+.sub small,.mut{color:var(--mut);font-size:13px}
+.add{border-style:dashed;border-top-width:1px;display:flex;align-items:center;justify-content:center;color:var(--ac);font-weight:700}
+button,.btn{font:inherit;background:var(--ac);color:#fff;border:0;border-radius:10px;padding:10px 14px;cursor:pointer;display:inline-block;text-decoration:none}
+button.g{background:transparent;color:var(--ac);border:1px solid var(--bd)}
+button.d{background:transparent;color:#c0392b;border:1px solid var(--bd)}
+.bar{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.bar h1{flex:1;margin:0}
+.tabs{display:flex;gap:8px;margin:12px 0}
+.tabs button{flex:1;background:var(--card);color:var(--tx);border:1px solid var(--bd);padding:10px 4px;font-size:14px}
+.tabs button.on{background:var(--ac);color:#fff}
+.f{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px;margin:8px 0;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.f .n{flex:1;word-break:break-word;min-width:38%}
+.empty{text-align:center;color:var(--mut);padding:32px 8px}
+input{font:inherit;width:100%;padding:10px;margin:6px 0;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx)}
+.form{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px;margin:12px 0}
+.foot{text-align:center;margin-top:28px}
+.opt{background:var(--card);color:var(--tx);border:1px solid var(--bd);padding:14px 10px}
+.opt.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+.pick h2{font-size:16px;margin:20px 0 10px}
+.pick .go{width:100%;margin-top:24px;padding:14px;font-weight:700}
+.pick .go[disabled]{opacity:.45;cursor:not-allowed}
+.sub{position:relative}
+.new{font-size:12px;color:var(--nw);font-weight:700}
+.sub .tag{position:absolute;top:8px;left:10px}
+.ann{background:var(--ab);color:var(--at);border:1px solid var(--abd);border-radius:12px;padding:12px;margin:0 0 12px;white-space:pre-wrap;word-break:break-word}
+.adm{display:flex;gap:8px;margin-bottom:12px}
+.adm button{flex:1;font-size:14px}
+.chk{background:transparent;color:inherit;border:0;padding:4px;font-size:20px;line-height:1}
+.f.dn .n{opacity:.55;text-decoration:line-through}
+.rh{font-size:15px;margin:16px 0 4px;color:var(--mut)}
+.stat{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.st{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;text-align:center;color:var(--mut);font-size:13px}
+.st b{display:block;font-size:26px;color:var(--ac)}
+.ic{padding:8px 10px;font-size:18px;line-height:1}
+.chg{width:100%;font-size:13px;margin:-4px 0 12px}
+.qa{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
+.qa button{font-size:14px;padding:10px 4px}
+.guide{text-align:center;padding-top:8px}
+.gtop{text-align:start;margin-bottom:8px}
+.gic{font-size:76px;margin:24px 0 8px}
+.guide h1{margin:8px 0}
+.guide p{color:var(--mut);line-height:1.8;max-width:420px;margin:0 auto;min-height:96px}
+.dots{display:flex;gap:6px;justify-content:center;margin:20px 0}
+.dots i{width:8px;height:8px;border-radius:50%;background:var(--bd)}
+.dots i.on{background:var(--ac);width:22px;border-radius:8px}
+.gnav{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.gnav button{min-width:120px}
+.gres{display:flex;gap:10px;background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;margin-bottom:12px;justify-content:center}
+.gbox{flex:1;text-align:center;color:var(--mut);font-size:12px}
+.gbox b{display:block;font-size:28px;color:var(--ac)}
+.gr{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:8px 10px;margin:8px 0}
+.gr input{margin:4px 0}
+.gl{display:flex;align-items:center;gap:6px}
+.gl input{margin:0}
+.gh{width:76px;flex:none}
+.gg{flex:1;min-width:0}
+.gc{font-size:12px;color:var(--mut);min-width:64px;text-align:center}
+.gx{padding:8px 10px}
+.gt{margin:12px 0}
+.gt summary{cursor:pointer;color:var(--ac);font-weight:700;margin-bottom:6px}
+.prog{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px 12px;margin:0 0 12px}
+.prog:empty{display:none}
+.pt{display:flex;justify-content:space-between;font-size:13px;color:var(--mut);margin-bottom:6px}
+.pt b{color:var(--ac)}
+.pbar{height:10px;background:var(--bd);border-radius:8px;overflow:hidden}
+.pbar i{display:block;height:100%;background:var(--ac);border-radius:8px;transition:width .3s}
+.pbar.mini{height:5px;margin-top:8px}
+.off{max-width:640px;margin:8px auto 0;background:var(--ab);color:var(--at);border:1px solid var(--abd);text-align:center;font-size:13px;padding:8px 12px;border-radius:10px}
+.off[hidden]{display:none}
+.pl{position:fixed;inset:0;z-index:50;background:var(--bg);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0)}
+.pl[hidden]{display:none}
+.plh{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--bd)}
+.plt{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.plb{flex:1;display:flex;flex-direction:column;justify-content:center;overflow:auto;background:var(--bg)}
+.plb iframe,.plb video{width:100%;border:0;background:#000;display:block}
+.plb .r16{aspect-ratio:16/9}
+.plb .full{flex:1;min-height:60vh}
+.plb audio{width:calc(100% - 32px);margin:24px 16px}
+.plf{padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--bd);display:flex;gap:8px}
+.plf button{flex:1}
+textarea,select{font:inherit;width:100%;padding:10px;margin:6px 0;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx)}
+textarea{resize:vertical;line-height:1.7}
+.lbl{display:block;font-size:13px;color:var(--mut);margin:10px 0 2px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{padding:8px 12px;font-size:13px}
+.sumbox h3{font-size:16px;margin:16px 0 6px;color:var(--ac)}
+.sumbox p{line-height:1.9;margin:8px 0}
+.sum{padding-inline-start:22px;line-height:1.9;margin:8px 0}
+.sum li{margin:6px 0}
+.qs{padding:4px 0}
+.qq{font-size:18px;line-height:1.7;margin:16px 0 8px}
+.qo{display:block;width:100%;text-align:start;margin:8px 0;white-space:normal;line-height:1.6}
+.qo.ok{background:#2e7d32;color:#fff;border-color:#2e7d32}
+.qo.bad{background:#c0392b;color:#fff;border-color:#c0392b}
+.fb{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px 12px;margin:10px 0}
+.res{text-align:center}
+.res .big{font-size:56px}
+.res h2{margin:4px 0}
+.wq{text-align:start;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px 12px;margin:8px 0}
+.okt{color:#2e7d32;margin:4px 0}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:28px 16px;min-height:190px;text-align:center;display:flex;flex-direction:column;justify-content:center;gap:10px;cursor:pointer;margin:12px 0;font-size:18px;line-height:1.7}
+.card.back{border-color:var(--ac)}
+.day{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px 12px;margin:8px 0}
+.day.today{border-color:var(--ac);border-width:2px}
+.day h3{margin:0 0 6px;font-size:15px;color:var(--ac)}
+.tk{display:flex;gap:8px;align-items:flex-start;padding:4px 0;line-height:1.7}
+.tk.dn span{opacity:.5;text-decoration:line-through}
+.warn{background:var(--ab);color:var(--at);border:1px solid var(--abd);border-radius:12px;padding:10px 12px;margin:8px 0}
+.ch{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center}
+.ch[hidden]{display:none}
+.chs{background:var(--bg);width:100%;max-width:640px;border-radius:18px 18px 0 0;padding:16px 16px calc(16px + env(safe-area-inset-bottom,0px))}
+.chs h3{margin:0 0 10px;font-size:16px;text-align:center}
+.chs button{width:100%;margin:6px 0;padding:16px;font-size:17px}
+.credit{text-align:center;color:var(--mut);font-size:13px;padding:8px 16px 28px}
+.credit b{color:var(--ac)}
+.stk{font-size:15px;padding:8px 10px;line-height:1}
+.stk.cold{opacity:.6}
+.chk.rp{opacity:.45;font-size:16px}
+.pmw{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:22px 12px;text-align:center;margin:8px 0 12px}
+.pmm{font-size:15px;color:var(--mut)}
+.pmt{font-size:56px;font-weight:700;color:var(--ac);font-variant-numeric:tabular-nums;direction:ltr}
+.rp{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px;margin:8px 0}
+.rp p{margin:6px 0;white-space:pre-wrap;word-break:break-word}
+</style>
+</head>
+<body>
+<div id="offb" class="off" hidden>📴 مفيش إنترنت — بتشوف آخر نسخة محفوظة على جهازك.</div>
+<div id="ch" class="ch" hidden></div>
+<div id="pl" class="pl" hidden></div>
+<main id="app"><p class="empty">جاري التحميل…</p></main>
+<footer class="credit">صُنع بحب بواسطة <b>خالد</b> ✨</footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script>
+<script>
+const SB_URL='https://lszsgcnczlmtmowgxloe.supabase.co';
+const SB_KEY='sb_publishable_sfb-DUhH5uxy-Zd8LMLxFA_mpMoSNTS';
+const COLORS=['#2f6f5e','#b5523b','#3b6bb5','#8a5bb5','#b58a2f','#c0457a'];
+const app=document.getElementById('app');
+const STAGES=['المرحلة الأولى','المرحلة الثانية','المرحلة الثالثة','المرحلة الرابعة','المرحلة الخامسة'];
+const TERMS={1:'الترم الأول',2:'الترم الثاني'};
+/* جدول التقديرات (النسبة الأدنى، الحرف، النقاط) — عدّله لو كليتك بتستخدم جدول مختلف */
+const GRADES=[[97,'A+',4.0],[93,'A',4.0],[89,'A-',3.7],[84,'B+',3.3],[80,'B',3.0],[76,'B-',2.7],[73,'C+',2.3],[70,'C',2.0],[67,'C-',1.7],[64,'D+',1.3],[60,'D',1.0],[0,'F',0]];
+const GUIDE=[
+ {i:'👋',t:'أهلاً بيك في محاضراتي',p:'كل محاضراتك في مكان واحد: شرائح، تسجيلات، وسكاشن لكل مادة. خلّينا نعرّفك على أهم المزايا في دقيقة.'},
+ {i:'🎯',t:'اختار مرحلتك والترم',p:'هتشوف مواد مرحلتك وترمك بس. وتقدر تغيّرهم في أي وقت من الزرار اللي فوق في الصفحة الرئيسية.'},
+ {i:'▶️',t:'شغّل من جوه التطبيق',p:'الفيديوهات والتسجيلات والشرائح بتشتغل جوه التطبيق زي يوتيوب، من غير ما تفتح تاب جديد. اضغط «▶ تشغيل» أو «👁 عرض».'},
+ {i:'🔎',t:'دوّر وتابع الجديد',p:'خانة البحث توصلك لأي مادة أو محاضرة، وعلامة 🆕 على اللي اتضاف آخر أسبوع، والإعلانات المهمة بتظهر فوق في شريط أصفر.'},
+ {i:'✅',t:'نظّم مذاكرتك',p:'علّم ✅ على المحاضرة اللي خلصتها وشوف شريط الإنجاز في كل مادة بيتحرك. وأضف ⭐ للمفضلة عشان ترجعلها بسرعة.'},
+ {i:'📝',t:'ملاحظاتك وبلاغاتك',p:'اضغط 🗒️ جنب أي محاضرة واكتب ملاحظاتك، وبتتحفظ على جهازك بس. ولو لينك مش شغال اضغط ⚠️ وهيوصل البلاغ لصاحب التطبيق. وفي «💡 اقتراح» تقدر تكتب أي فكرة.'},
+ {i:'🔥',t:'سلسلة المذاكرة',p:'كل يوم تفتح فيه محاضرة أو تعلّم ✅ أو تخلّص جلسة بومودورو بيزيد عدّاد 🔥. حافظ على السلسلة، واستخدم «⏱️ بومودورو» عشان تركّز وترتاح بنظام.'},
+ {i:'🧠',t:'اختبر نفسك',p:'لو جنب المحاضرة زرار 🧠 يبقى ليها ملخص وأسئلة. اقرا الملخص، واختبر نفسك، وراجع بالبطاقات. وكل الملخصات في «🧠 المذاكرة».'},
+ {i:'📅',t:'جدول مذاكرة',p:'ضيف امتحاناتك ومواعيدها، والتطبيق يقسملك المحاضرات المتبقية على الأيام اللي فاضلة، مع يوم مراجعة قبل كل امتحان.'},
+ {i:'🎓',t:'احسب معدلك',p:'دخّل ساعات المواد ودرجاتك، وشوف معدلك الفصلي والتراكمي المتوقع.'},
+ {i:'🌙',t:'داكن وبدون إنترنت',p:'غيّر المظهر من زرار 🌙. وبعد ما تفتح التطبيق مرة بنت، الجدول والمواد والملخصات بتفضل شغالة حتى لو النت قطع (الفيديوهات بس محتاجة نت).'},
+ {i:'📲',t:'ضيفه على شاشتك',p:'أندرويد: من قايمة المتصفح ⋮ اختار «تثبيت التطبيق». آيفون: من Safari اضغط مشاركة ثم «إضافة إلى الشاشة الرئيسية».'}
+];
+let offline=false,sb,subs=[],items=[],aids=[],ann='',cur=null,tab='slides',admin=false,view='home',stage=null,term=null,tmpS=null,tmpT=null,q='',qs='',gi=0;
+let done=new Set(),fav=new Set(),seen=false,gp={rows:[],ph:'',pg:''};
+let curItem=null,aidFrom='home',aidTab='sum',qz=null,cd={i:0,f:false},pl={exams:[],perDay:3,off:[5]},plDone=new Set();
+
+/* ---------- تخزين محلي ---------- */
+const ls={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
+function loadSel(){try{const v=JSON.parse(ls.get('sel')||'null');
+  if(v&&v.stage>=1&&v.stage<=STAGES.length&&(v.term===1||v.term===2)){stage=v.stage;term=v.term}}catch(e){}}
+function saveSel(){ls.set('sel',JSON.stringify({stage,term}))}
+function clearSel(){ls.del('sel');stage=term=tmpS=tmpT=null}
+function loadSet(k){try{return new Set(JSON.parse(ls.get(k)||'[]').map(String))}catch(e){return new Set()}}
+function saveSet(k,s){ls.set(k,JSON.stringify([...s]))}
+function loadGpa(){
+  try{const v=JSON.parse(ls.get('gpa')||'null');
+    if(v&&Array.isArray(v.rows))gp={rows:v.rows.slice(0,30).map(r=>({n:String(r.n||''),h:String(r.h||''),g:String(r.g||'')})),ph:String(v.ph||''),pg:String(v.pg||'')}}catch(e){}
+  if(!gp.rows.length)gp.rows=[0,1,2,3,4].map(()=>({n:'',h:'3',g:''}));
+}
+function saveGpa(){ls.set('gpa',JSON.stringify(gp))}
+
+/* ---------- أدوات ---------- */
+const vis=()=>subs.filter(s=>s.stage===stage&&s.term===term);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const safeUrl=u=>/^https?:\/\//i.test(u)?u:'#';
+const fail=e=>alert('حصلت مشكلة: '+(e&&e.message?e.message:e));
+const norm=s=>String(s||'').toLowerCase().replace(/[\u064B-\u0652\u0640]/g,'').replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').trim();
+const toEn=s=>String(s==null?'':s).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/٫/g,'.').replace(/،/g,'.');
+const isNew=i=>!!i.created_at&&(Date.now()-new Date(i.created_at).getTime())<7*864e5;
+
+/* ---------- المظهر (فاتح / داكن) ---------- */
+const isDark=()=>{const t=document.documentElement.getAttribute('data-theme');
+  return t?t==='dark':!!(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)};
+function thmBtn(){return `<button class="g ic" id="thm" aria-label="تغيير المظهر">${isDark()?'☀️':'🌙'}</button>`}
+function bindTheme(){const b=document.getElementById('thm');if(!b)return;
+  b.onclick=()=>{const n=isDark()?'light':'dark';document.documentElement.setAttribute('data-theme',n);ls.set('theme',n);b.textContent=isDark()?'☀️':'🌙'}}
+
+/* ---------- تسجيل الزيارات (جهاز عشوائي، من غير أي بيانات شخصية) ---------- */
+function devId(){let d=ls.get('dev');
+  if(!d){d=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2);ls.set('dev',d)}
+  return d}
+function logVisit(){
+  if(admin||!stage||!term)return;
+  try{
+    const key=new Date().toLocaleDateString('en-CA')+'|'+stage+'|'+term;
+    if(ls.get('lastlog')===key)return;
+    sb.from('visits').insert({device:devId(),stage,term}).then(r=>{if(!r.error)ls.set('lastlog',key)},()=>{});
+  }catch(e){}
+}
+
+function setOffline(v){offline=v;const b=document.getElementById('offb');if(b)b.hidden=!v}
+async function load(){
+  let a,b,c,d;
+  try{
+    [a,b,c,d]=await Promise.all([
+      sb.from('subjects').select('*').order('created_at'),
+      sb.from('items').select('*').order('created_at'),
+      sb.from('announcements').select('body').order('created_at',{ascending:false}).limit(1),
+      sb.from('aids').select('*')]);
+  }catch(e){a=b=c=d={error:e}}
+  if(a.error||b.error){
+    try{
+      const sn=JSON.parse(ls.get('snap')||'null');
+      if(sn&&Array.isArray(sn.subs)&&Array.isArray(sn.items)){subs=sn.subs;items=sn.items;ann=sn.ann||'';aids=Array.isArray(sn.aids)?sn.aids:[];setOffline(true);return true}
+    }catch(e){}
+    app.innerHTML='<p class="empty">تعذّر تحميل البيانات. اتأكد من الاتصال بالإنترنت وجرّب تاني.</p>';return false}
+  subs=a.data;items=b.data;
+  ann=(!c.error&&c.data&&c.data[0]&&c.data[0].body)||'';
+  aids=(!d.error&&Array.isArray(d.data))?d.data:[];
+  ls.set('snap',JSON.stringify({subs,items,ann,aids}));
+  setOffline(false);return true;
+}
+async function reload(){if(await load()){await loadReports();render()}}
+function render(){
+  if(view==='login')return login();
+  if(!seen||view==='guide')return guide();
+  if(!stage||!term)return pick();
+  if(view==='aid')return aidView();
+  if(view==='aided'&&admin)return aidEditor();
+  if(view==='hub')return hubView();
+  if(view==='plan')return planView();
+  if(view==='stats'&&admin)return stats();
+  if(view==='pomo')return pomoView();
+  if(view==='sug')return sugView();
+  if(view==='inbox'&&admin)return inboxView();
+  if(view==='gpa')return gpaView();
+  if(view==='fav')return favView();
+  if(view==='subject'&&subs.find(s=>s.id===cur))return subject();
+  view='home';home();
+}
+
+/* ---------- شاشة الترحيب / دليل الاستخدام ---------- */
+function guide(){
+  const g=GUIDE[gi],last=gi===GUIDE.length-1;
+  app.innerHTML=`<div class="guide"><div class="gtop"><button class="g" id="skip">${seen?'إغلاق ✕':'تخطي'}</button></div>
+  <div class="gic">${g.i}</div><h1>${g.t}</h1><p>${g.p}</p>
+  <div class="dots">${GUIDE.map((_,k)=>`<i class="${k===gi?'on':''}"></i>`).join('')}</div>
+  <div class="gnav">${gi>0?'<button class="g" id="prv">السابق</button>':'<span></span>'}<button id="nxt">${last?'يلا نبدأ 🚀':'التالي'}</button></div></div>`;
+  const end=()=>{seen=true;ls.set('seen','2');gi=0;view='home';render()};
+  document.getElementById('skip').onclick=end;
+  document.getElementById('nxt').onclick=()=>{last?end():(gi++,guide())};
+  const p=document.getElementById('prv');if(p)p.onclick=()=>{gi--;guide()};
+}
+
+/* ---------- اختيار بين ملف وفيديو (للسكاشن) ---------- */
+const hasV2=i=>/^https?:\/\//i.test(i.url||'')&&/^https?:\/\//i.test(i.url2||'');
+function closeChoice(){const c=document.getElementById('ch');if(c){c.hidden=true;c.innerHTML=''}}
+function openChoice(it){
+  const c=document.getElementById('ch');if(!c)return openPlayer(it);
+  c.innerHTML=`<div class="chs"><h3>${esc(it.title)}</h3><button id="chf">📄 ملف</button><button id="chv">🎬 فيديو</button><button class="g" id="chx">إلغاء</button></div>`;
+  c.hidden=false;
+  c.onclick=e=>{if(e.target===c)closeChoice()};
+  document.getElementById('chx').onclick=closeChoice;
+  document.getElementById('chf').onclick=()=>{closeChoice();openPlayer(Object.assign({},it,{kind:'slides'}))};
+  document.getElementById('chv').onclick=()=>{closeChoice();openPlayer(Object.assign({},it,{url:it.url2,kind:'rec'}))};
+}
+
+/* ---------- مشغّل داخل التطبيق (يوتيوب / درايف / ملفات صوت وفيديو) ---------- */
+let playerOpen=false;
+function embedInfo(u){
+  u=String(u||'').trim();let m;
+  if(!/^https?:\/\//i.test(u))return null;
+  if(m=u.match(/(?:youtube\.com\/(?:watch\?(?:[^#]*&)?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([\w-]{11})/i))
+    return {t:'yt',src:'https://www.youtube-nocookie.com/embed/'+m[1]+'?rel=0&playsinline=1'};
+  if(m=u.match(/drive\.google\.com\/file\/d\/([\w-]+)/i))
+    return {t:'drive',src:'https://drive.google.com/file/d/'+m[1]+'/preview'};
+  if(m=u.match(/drive\.google\.com\/(?:open|uc)\?(?:[^#]*&)?id=([\w-]+)/i))
+    return {t:'drive',src:'https://drive.google.com/file/d/'+m[1]+'/preview'};
+  if(m=u.match(/docs\.google\.com\/(presentation|document|spreadsheets)\/d\/([\w-]+)/i))
+    return {t:'doc',src:'https://docs.google.com/'+m[1]+'/d/'+m[2]+'/preview'};
+  if(m=u.match(/drive\.google\.com\/drive\/(?:u\/\d+\/)?folders\/([\w-]+)/i))
+    return {t:'folder',src:'https://drive.google.com/embeddedfolderview?id='+m[1]+'#list'};
+  const path=u.split(/[?#]/)[0].toLowerCase();
+  if(/\.(mp4|webm|m4v|mov)$/.test(path))return {t:'video',src:u};
+  if(/\.(mp3|m4a|wav|ogg|aac)$/.test(path))return {t:'audio',src:u};
+  return null;
+}
+function closePlayer(){
+  const pl=document.getElementById('pl');playerOpen=false;
+  if(pl){pl.hidden=true;pl.innerHTML=''}
+  document.body.style.overflow='';
+}
+function openPlayer(it){
+  const e=embedInfo(it.url),pl=document.getElementById('pl');
+  markStudy();if(!e||!pl){window.open(safeUrl(it.url),'_blank','noopener');return}
+  const id=String(it.id),ratio=e.t==='yt'||e.t==='video'||(e.t==='drive'&&it.kind==='rec');
+  let body;
+  if(e.t==='audio')body=`<audio controls autoplay src="${esc(e.src)}"></audio>`;
+  else if(e.t==='video')body=`<video class="r16" controls autoplay playsinline src="${esc(e.src)}"></video>`;
+  else body=`<iframe class="${ratio?'r16':'full'}" src="${esc(e.src)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+  pl.innerHTML=`<div class="plh"><button class="g" id="plc" aria-label="إغلاق">✕</button><b class="plt">${esc(it.title)}</b><a class="g btn" id="plx" href="${esc(safeUrl(it.url))}" target="_blank" rel="noopener" title="فتح في تاب جديد">↗</a></div>
+  <div class="plb">${body}</div>
+  <div class="plf"><button id="pld">${done.has(id)?'✅ تم المذاكرة':'⬜ علّم إنك خلصت'}</button><button class="g" id="pln">📝 ملاحظاتي</button></div>`;
+  pl.hidden=false;playerOpen=true;document.body.style.overflow='hidden';
+  try{history.pushState({pl:1},'')}catch(err){}
+  document.getElementById('plc').onclick=()=>{try{if(history.state&&history.state.pl){history.back();return}}catch(err){}closePlayer()};
+  document.getElementById('pld').onclick=ev=>{
+    done.has(id)?done.delete(id):done.add(id);saveSet('done',done);if(done.has(id))markStudy();
+    ev.target.textContent=done.has(id)?'✅ تم المذاكرة':'⬜ علّم إنك خلصت';refresh()};
+  document.getElementById('pln').onclick=()=>noteModal(id);
+}
+window.addEventListener('popstate',()=>{if(playerOpen)closePlayer()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){const c=document.getElementById('ch');if(c&&!c.hidden){closeChoice();return}}if(e.key==='Escape'&&playerOpen){try{if(history.state&&history.state.pl){history.back();return}}catch(err){}closePlayer()}});
+
+/* ---------- صف ملف (بيتستخدم في المادة وفي نتايج البحث والمفضلة) ---------- */
+function fileRow(i,showSub){
+  const id=String(i.id),d=done.has(id),f=fav.has(id);
+  const sn=showSub?subs.find(s=>s.id===i.subject_id):null;
+  return `<div class="f${d?' dn':''}"><button class="chk" data-k="${esc(id)}" title="تم المذاكرة" aria-label="تم المذاكرة">${d?'✅':'⬜'}</button><span class="n">${esc(i.title)}${hasV2(i)?' <small class="mut">· 📄 + 🎬</small>':''}${isNew(i)?' <span class="new">🆕</span>':''}${sn?` <small class="mut">· ${esc(sn.name)}</small>`:''}</span><button class="chk" data-f="${esc(id)}" title="المفضلة" aria-label="المفضلة">${f?'⭐':'☆'}</button><button class="chk" data-n="${esc(id)}" title="ملاحظاتي" aria-label="ملاحظاتي">${hasNote(id)?'📝':'🗒️'}</button>${admin?'':`<button class="chk rp" data-r="${esc(id)}" title="بلّغ عن مشكلة" aria-label="بلّغ عن مشكلة">⚠️</button>`}${hasV2(i)?`<button class="btn" data-c="${esc(id)}">📂 فتح</button>`:embedInfo(i.url)?`<button class="btn" data-p="${esc(id)}">${i.kind==='rec'?'▶ تشغيل':'👁 عرض'}</button>`:`<a class="btn" href="${esc(safeUrl(i.url))}" target="_blank" rel="noopener">فتح</a>`}${(aidOf(id)||admin)?`<button class="${aidOf(id)?'btn':'g'}" data-a="${esc(id)}" title="ملخص وأسئلة" aria-label="ملخص وأسئلة">🧠</button>`:''}${admin?`<button class="g" data-e="${esc(id)}">✏️</button><button class="d" data-x="${esc(id)}">حذف</button>`:''}</div>`;
+}
+function refresh(){view==='subject'?fillList():view==='fav'?fillFav():fillRes()}
+function bindFiles(){
+  app.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{
+    const k=b.dataset.k;done.has(k)?done.delete(k):done.add(k);saveSet('done',done);if(done.has(k))markStudy();refresh()});
+  app.querySelectorAll('[data-n]').forEach(b=>b.onclick=()=>noteModal(b.dataset.n));
+  app.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>reportModal(b.dataset.r));
+  app.querySelectorAll('a.btn[href]').forEach(a=>a.addEventListener('click',markStudy));
+  app.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{
+    const k=b.dataset.f;fav.has(k)?fav.delete(k):fav.add(k);saveSet('fav',fav);refresh()});
+  app.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{const id=b.dataset.a;if(!aidOf(id)&&admin){curItem=id;aidFrom=view;view='aided';render()}else openAid(id)});
+  app.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{const it=items.find(i=>String(i.id)===b.dataset.c);if(it)openChoice(it)});
+  app.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{const it=items.find(i=>String(i.id)===b.dataset.p);if(it)openPlayer(it)});
+  if(!admin)return;
+  app.querySelectorAll('[data-x]').forEach(b=>b.onclick=async()=>{
+    if(!confirm('حذف الملف؟'))return;
+    const {error}=await sb.from('items').delete().eq('id',b.dataset.x);error?fail(error):reload()});
+  app.querySelectorAll('[data-e]').forEach(b=>b.onclick=async()=>{
+    const it=items.find(i=>String(i.id)===b.dataset.e);if(!it)return;
+    const title=prompt('اسم الملف؟',it.title);if(title===null)return;
+    const url=prompt('اللينك؟',it.url);if(url===null)return;
+    let u2='';const dual=it.kind==='sec'||!!it.url2;
+    if(dual){const v=prompt('لينك الفيديو (سيبه فاضي لو مفيش)',it.url2||'');if(v===null)return;u2=v.trim()}
+    const t=title.trim(),u=url.trim();
+    if(!t||!/^https?:\/\//i.test(u)||(u2&&!/^https?:\/\//i.test(u2)))return alert('اكتب الاسم ولينك صحيح بيبدأ بـ https');
+    const up={title:t,url:u};if(dual&&(u2||it.url2))up.url2=u2||null;
+    const {error}=await sb.from('items').update(up).eq('id',it.id);error?fail(error):reload()});
+}
+
+/* ---------- الصفحة الرئيسية ---------- */
+function progHtml(sid){
+  const its=items.filter(i=>i.subject_id===sid);if(!its.length)return '';
+  const d=its.filter(i=>done.has(String(i.id))).length,pct=Math.round(d/its.length*100);
+  return `<div class="pt"><span>📈 تقدمك في المادة</span><b>${pct}%</b></div><div class="pbar"><i style="width:${pct}%"></i></div><div class="pt" style="margin:6px 0 0"><span>خلصت ${d} من ${its.length} ملف</span>${pct===100?'<span>🎉 خلصت المنهج!</span>':''}</div>`;
+}
+function subCard(s){
+  const its=items.filter(i=>i.subject_id===s.id);
+  const nw=its.filter(isNew).length,dn=its.filter(i=>done.has(String(i.id))).length;
+  return `<div class="sub" style="--c:${esc(s.color||'#2f6f5e')}" data-id="${esc(s.id)}"><b>${esc(s.name)}</b><small>${its.length} ملف${dn?' · ✅ '+dn:''}</small>${its.length?`<div class="pbar mini"><i style="width:${Math.round(dn/its.length*100)}%"></i></div>`:''}${nw?`<span class="new tag">🆕 ${nw}</span>`:''}</div>`;
+}
+function homeBody(){
+  const nq=norm(q),vs=vis();
+  if(!nq){
+    return '<div class="grid">'+vs.map(subCard).join('')+(admin?'<div class="sub add" id="addsub">＋ مادة جديدة</div>':'')+'</div>'+
+      (vs.length?'':'<p class="empty">لسه مفيش مواد في المرحلة والترم دول.</p>');
+  }
+  const ms=vs.filter(s=>norm(s.name).includes(nq));
+  const fs=items.filter(i=>norm(i.title).includes(nq)&&vs.some(s=>s.id===i.subject_id));
+  let h='';
+  if(ms.length)h+='<h2 class="rh">المواد</h2><div class="grid">'+ms.map(subCard).join('')+'</div>';
+  if(fs.length)h+='<h2 class="rh">الملفات</h2>'+fs.map(i=>fileRow(i,true)).join('');
+  return h||'<p class="empty">مفيش نتايج.</p>';
+}
+function fillRes(){
+  const r=document.getElementById('res');if(!r)return;
+  r.innerHTML=homeBody();
+  app.querySelectorAll('.sub[data-id]').forEach(e=>e.onclick=()=>{cur=e.dataset.id;view='subject';qs='';render()});
+  const a=document.getElementById('addsub');
+  if(a)a.onclick=async()=>{
+    const name=prompt('اسم المادة؟');if(!name||!name.trim())return;
+    const {error}=await sb.from('subjects').insert({name:name.trim(),color:COLORS[subs.length%COLORS.length],stage,term});
+    error?fail(error):reload()};
+  bindFiles();
+}
+function home(){
+  const fc=items.filter(i=>fav.has(String(i.id))).length;
+  const vsid=new Set(vis().map(s=>String(s.id))),hc=items.filter(i=>vsid.has(String(i.subject_id))&&aidOf(i.id)).length,tp=todayPending();
+  app.innerHTML=`<div class="bar"><h1>📚 محاضراتي</h1><button class="g ic stk${studiedToday()?'':' cold'}" id="stk" aria-label="سلسلة المذاكرة" title="أيام مذاكرة متتالية">🔥 ${streakNow()}</button><button class="g ic" id="qgd" aria-label="دليل الاستخدام">❓</button>${thmBtn()}</div>
+  <button class="g chg" id="chg">${STAGES[stage-1]} · ${TERMS[term]} ⇄</button>
+  ${ann?`<div class="ann">📢 ${esc(ann)}</div>`:''}
+  <div class="qa"><button class="g" id="qfav">⭐ المفضلة${fc?' ('+fc+')':''}</button><button class="g" id="qhub">🧠 المذاكرة${hc?' ('+hc+')':''}</button><button class="g" id="qplan">📅 جدول المذاكرة${tp?' ('+tp+')':''}</button><button class="g" id="qgpa">🎓 المعدل</button><button class="g" id="qpm">⏱️ بومودورو</button><button class="g" id="qsg">💡 اقتراح</button></div>
+  ${admin?`<div class="adm"><button class="g" id="annb">📢 ${ann?'تعديل الإعلان':'إضافة إعلان'}</button><button class="g" id="stb">📊 الإحصائيات</button><button class="g" id="inb">📥 البلاغات${reports.length?' ('+reports.length+')':''}</button></div>`:''}
+  <input id="q" type="search" dir="auto" placeholder="🔎 ابحث عن مادة أو محاضرة…" value="${esc(q)}" autocomplete="off">
+  <div id="res"></div>
+  <div class="foot"><button class="g" id="lock">${admin?'تسجيل الخروج':'🔒 دخول صاحب التطبيق'}</button></div>`;
+  bindTheme();
+  document.getElementById('q').oninput=e=>{q=e.target.value;fillRes()};
+  fillRes();
+  document.getElementById('chg').onclick=()=>{clearSel();render()};
+  document.getElementById('qfav').onclick=()=>{view='fav';render()};
+  document.getElementById('qgpa').onclick=()=>{view='gpa';render()};
+  document.getElementById('qhub').onclick=()=>{view='hub';render()};
+  document.getElementById('qplan').onclick=()=>{view='plan';render()};
+  document.getElementById('qgd').onclick=()=>{gi=0;view='guide';render()};
+  document.getElementById('stk').onclick=()=>{view='pomo';render()};
+  document.getElementById('qpm').onclick=()=>{view='pomo';render()};
+  document.getElementById('qsg').onclick=()=>{view='sug';render()};
+  document.getElementById('lock').onclick=async()=>{
+    if(admin){await sb.auth.signOut();admin=false;render()}else{view='login';render()}};
+  if(admin){
+    document.getElementById('annb').onclick=async()=>{
+      const t=prompt('اكتب الإعلان (سيبه فاضي لو عايز تمسحه):',ann);if(t===null)return;
+      const {error}=await sb.from('announcements').insert({body:t.trim()});error?fail(error):reload()};
+    document.getElementById('stb').onclick=()=>{view='stats';render()};
+    document.getElementById('inb').onclick=()=>{view='inbox';render()};
+  }
+}
+
+/* ---------- المفضلة ---------- */
+function favView(){
+  app.innerHTML=`<div class="bar"><button class="g" id="back">→</button><h1>⭐ المفضلة</h1></div><div id="fl"></div>`;
+  document.getElementById('back').onclick=()=>{view='home';render()};
+  fillFav();
+}
+function fillFav(){
+  const r=document.getElementById('fl');if(!r)return;
+  const l=items.filter(i=>fav.has(String(i.id)));
+  r.innerHTML=l.length?l.map(i=>fileRow(i,true)).join(''):'<p class="empty">لسه ماضفتش حاجة للمفضلة. اضغط ☆ جنب أي ملف.</p>';
+  bindFiles();
+}
+
+/* ---------- حاسبة المعدل ---------- */
+function parseGrade(v){
+  v=toEn(v).trim().toUpperCase().replace(/＋/g,'+').replace(/[−–]/g,'-');
+  if(!v)return null;
+  if(/^\d+(\.\d+)?$/.test(v)){const n=parseFloat(v);if(n>100)return null;const g=GRADES.find(g=>n>=g[0]);return g?{l:g[1],p:g[2]}:null}
+  const g=GRADES.find(g=>g[1]===v);return g?{l:g[1],p:g[2]}:null;
+}
+function gradeChip(r){
+  if(!String(r.g).trim())return '';
+  const g=parseGrade(r.g);return g?g.l+' · '+g.p.toFixed(1):'⚠️ غير مفهوم';
+}
+function gpaCalc(){
+  let pts=0,hrs=0;
+  gp.rows.forEach(r=>{const h=parseFloat(toEn(r.h)),g=parseGrade(r.g);if(h>0&&g){pts+=h*g.p;hrs+=h}});
+  const sem=hrs?pts/hrs:null;
+  const ph=parseFloat(toEn(gp.ph)),pg=parseFloat(toEn(gp.pg));
+  let cum=null;
+  if(hrs&&ph>0&&pg>=0&&pg<=4)cum=(pg*ph+pts)/(ph+hrs);
+  return {sem,hrs,cum};
+}
+function gpaResultHtml(){
+  const c=gpaCalc();
+  if(c.sem===null)return '<p class="mut" style="margin:0;text-align:center">اكتب الساعات والدرجات وهيظهر معدلك هنا.</p>';
+  let h=`<div class="gbox"><small>المعدل الفصلي</small><b>${c.sem.toFixed(2)}</b></div><div class="gbox"><small>ساعات الترم</small><b>${Math.round(c.hrs*10)/10}</b></div>`;
+  if(c.cum!==null)h+=`<div class="gbox"><small>المعدل التراكمي</small><b>${c.cum.toFixed(2)}</b></div>`;
+  return h;
+}
+function gpaView(){
+  app.innerHTML=`<div class="bar"><button class="g" id="back">→</button><h1>🎓 حاسبة المعدل</h1></div>
+  <div class="gres" id="gres">${gpaResultHtml()}</div>
+  <div id="grows">${gp.rows.map((r,i)=>`<div class="gr" data-r="${i}"><input class="gn" placeholder="اسم المادة" value="${esc(r.n)}">
+    <div class="gl"><input class="gh" inputmode="decimal" placeholder="الساعات" value="${esc(r.h)}"><input class="gg" dir="ltr" placeholder="الدرجة أو الحرف" value="${esc(r.g)}"><span class="gc">${esc(gradeChip(r))}</span><button class="d gx" aria-label="حذف">✕</button></div></div>`).join('')}</div>
+  <div class="adm"><button class="g" id="gadd">＋ مادة</button><button class="g" id="gimp">📥 هات مواد الترم</button><button class="d" id="gclr">🗑 مسح</button></div>
+  <div class="form"><b>معدلك قبل الترم ده (اختياري)</b>
+    <input id="gpg" inputmode="decimal" dir="ltr" placeholder="المعدل التراكمي السابق (من 4)" value="${esc(gp.pg)}">
+    <input id="gph" inputmode="decimal" dir="ltr" placeholder="عدد الساعات اللي خلصتها قبل كده" value="${esc(gp.ph)}"></div>
+  <details class="gt"><summary>جدول التقديرات المستخدم</summary>${GRADES.map((g,i)=>`<div class="f"><span class="n">${g[1]}</span><span class="mut">${i===0?'من '+g[0]+'%':i===GRADES.length-1?'أقل من '+GRADES[i-1][0]+'%':'من '+g[0]+'% لأقل من '+GRADES[i-1][0]+'%'}</span><b>${g[2].toFixed(1)}</b></div>`).join('')}
+    <p class="mut">ده جدول تقديرات شائع على مقياس 4.0. لو كليتك بتستخدم جدول مختلف، النتيجة ممكن تختلف عن المعدل الرسمي.</p></details>`;
+  document.getElementById('back').onclick=()=>{view='home';render()};
+  const upd=()=>{document.getElementById('gres').innerHTML=gpaResultHtml()};
+  const box=document.getElementById('grows');
+  box.oninput=e=>{
+    const row=e.target.closest('[data-r]');if(!row)return;
+    const r=gp.rows[+row.dataset.r];if(!r)return;const t=e.target;
+    if(t.classList.contains('gn'))r.n=t.value;
+    else if(t.classList.contains('gh'))r.h=t.value;
+    else if(t.classList.contains('gg'))r.g=t.value;
+    saveGpa();row.querySelector('.gc').textContent=gradeChip(r);upd()};
+  box.onclick=e=>{
+    const x=e.target.closest('.gx');if(!x)return;
+    gp.rows.splice(+x.closest('[data-r]').dataset.r,1);
+    if(!gp.rows.length)gp.rows.push({n:'',h:'3',g:''});
+    saveGpa();gpaView()};
+  document.getElementById('gadd').onclick=()=>{if(gp.rows.length>=30)return;gp.rows.push({n:'',h:'3',g:''});saveGpa();gpaView()};
+  document.getElementById('gimp').onclick=()=>{
+    const names=vis().map(s=>s.name);if(!names.length)return alert('مفيش مواد مسجلة للمرحلة والترم ده.');
+    const have=new Set(gp.rows.map(r=>norm(r.n)));
+    names.filter(n=>!have.has(norm(n))).forEach(n=>{
+      const empty=gp.rows.find(r=>!r.n.trim()&&!r.g.trim());
+      empty?empty.n=n:gp.rows.length<30&&gp.rows.push({n,h:'3',g:''})});
+    saveGpa();gpaView()};
+  document.getElementById('gclr').onclick=()=>{
+    if(!confirm('مسح كل المواد والدرجات؟'))return;
+    gp={rows:[0,1,2,3,4].map(()=>({n:'',h:'3',g:''})),ph:'',pg:''};saveGpa();gpaView()};
+  document.getElementById('gpg').oninput=e=>{gp.pg=e.target.value;saveGpa();upd()};
+  document.getElementById('gph').oninput=e=>{gp.ph=e.target.value;saveGpa();upd()};
+}
+
+/* ---------- اختيار المرحلة والترم ---------- */
+function pick(){
+  app.innerHTML=`<div class="pick"><div class="bar"><h1>📚 محاضراتي</h1>${thmBtn()}</div><p class="mut">اختار مرحلتك الدراسية والترم عشان تشوف محاضراتك.</p>
+  <h2>المرحلة</h2><div class="grid">${STAGES.map((n,i)=>`<button class="opt${tmpS===i+1?' on':''}" data-s="${i+1}">${n}</button>`).join('')}</div>
+  <h2>الترم</h2><div class="tabs"><button class="opt${tmpT===1?' on':''}" data-t="1">${TERMS[1]}</button><button class="opt${tmpT===2?' on':''}" data-t="2">${TERMS[2]}</button></div>
+  <button class="go" id="go"${tmpS&&tmpT?'':' disabled'}>دخول</button>
+  <div class="foot"><button class="g" id="lock">${admin?'تسجيل الخروج':'🔒 دخول صاحب التطبيق'}</button></div></div>`;
+  bindTheme();
+  app.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{tmpS=+b.dataset.s;pick()});
+  app.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{tmpT=+b.dataset.t;pick()});
+  document.getElementById('go').onclick=()=>{if(!tmpS||!tmpT)return;stage=tmpS;term=tmpT;saveSel();view='home';q='';render();logVisit()};
+  document.getElementById('lock').onclick=async()=>{
+    if(admin){await sb.auth.signOut();admin=false;pick()}else{view='login';render()}};
+}
+
+function login(){
+  app.innerHTML=`<div class="bar"><button class="g" id="back">→</button><h1>دخول</h1></div>
+  <div class="form"><input id="em" type="email" placeholder="الإيميل" autocomplete="username"><input id="pw" type="password" placeholder="كلمة السر" autocomplete="current-password"><button id="go">دخول</button></div>`;
+  document.getElementById('back').onclick=()=>{view='home';render()};
+  document.getElementById('go').onclick=async()=>{
+    const {error}=await sb.auth.signInWithPassword({email:document.getElementById('em').value.trim(),password:document.getElementById('pw').value});
+    if(error)return alert('الإيميل أو كلمة السر غلط.');
+    admin=true;view='home';reload()};
+}
+
+/* ---------- صفحة المادة ---------- */
+function listHtml(){
+  const nq=norm(qs);
+  const list=items.filter(i=>i.subject_id===cur&&i.kind===tab&&(!nq||norm(i.title).includes(nq)));
+  return list.length?list.map(i=>fileRow(i,false)).join(''):`<p class="empty">${nq?'مفيش نتايج.':'لسه مفيش ملفات هنا.'}</p>`;
+}
+function fillList(){const r=document.getElementById('lst');if(!r)return;r.innerHTML=listHtml();const pr=document.getElementById('prog');if(pr)pr.innerHTML=progHtml(cur);bindFiles()}
+function subject(){
+  const s=subs.find(x=>x.id===cur);
+  const all=items.filter(i=>i.subject_id===cur);
+  const nt=k=>all.some(i=>i.kind===k&&isNew(i))?' 🆕':'';
+  app.innerHTML=`<div class="bar"><button class="g" id="back">→</button><h1>${esc(s.name)}</h1>${admin?'<button class="g" id="ren">✏️</button><button class="d" id="del">🗑</button>':''}</div>
+  <div class="prog" id="prog"></div>
+  <div class="tabs"><button data-t="slides" class="${tab==='slides'?'on':''}">🖼 الشرائح${nt('slides')}</button><button data-t="rec" class="${tab==='rec'?'on':''}">🎧 التسجيلات${nt('rec')}</button><button data-t="sec" class="${tab==='sec'?'on':''}">📝 السكاشن${nt('sec')}</button></div>
+  ${all.length>=4?`<input id="qs" type="search" dir="auto" placeholder="🔎 ابحث في الملفات…" value="${esc(qs)}" autocomplete="off">`:''}
+  ${admin?`<div class="form"><input id="ti" placeholder="اسم الملف (مثال: محاضرة 1)">${tab==='sec'?'<input id="ur" type="url" dir="ltr" placeholder="لينك الملف (Drive)"><input id="ur2" type="url" dir="ltr" placeholder="لينك الفيديو (اختياري)">':'<input id="ur" type="url" dir="ltr" placeholder="الصق لينك Drive هنا">'}<button id="ad">＋ إضافة ${tab==='slides'?'شرائح':tab==='rec'?'تسجيل':'سكشن'}</button></div>`:''}
+  <div id="lst"></div>`;
+  fillList();
+  const qi=document.getElementById('qs');if(qi)qi.oninput=e=>{qs=e.target.value;fillList()};
+  document.getElementById('back').onclick=()=>{view='home';render()};
+  app.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{tab=b.dataset.t;qs='';render()});
+  if(!admin)return;
+  document.getElementById('ren').onclick=async()=>{
+    const n=prompt('الاسم الجديد؟',s.name);if(!n||!n.trim())return;
+    const {error}=await sb.from('subjects').update({name:n.trim()}).eq('id',s.id);error?fail(error):reload()};
+  document.getElementById('del').onclick=async()=>{
+    if(!confirm('حذف المادة وكل ملفاتها؟'))return;
+    const {error}=await sb.from('subjects').delete().eq('id',s.id);
+    if(error)return fail(error);view='home';reload()};
+  document.getElementById('ad').onclick=async()=>{
+    const title=document.getElementById('ti').value.trim(),u1=document.getElementById('ur').value.trim();
+    const e2=document.getElementById('ur2'),u2=e2?e2.value.trim():'',ok=u=>/^https?:\/\//i.test(u);
+    if(!title||(!u1&&!u2)||(u1&&!ok(u1))||(u2&&!ok(u2)))return alert('اكتب الاسم والصق لينك صحيح بيبدأ بـ https');
+    const row={subject_id:s.id,kind:tab,title,url:u1||u2};if(u1&&u2)row.url2=u2;
+    const {error}=await sb.from('items').insert(row);error?fail(error):reload()};
+}
+
+/* ---------- الإحصائيات (للمالك بس) ---------- */
+async function stats(){
+  app.innerHTML=`<div class="bar"><button class="g" id="back">→</button><h1>📊 الإحصائيات</h1></div><div id="sbox"><p class="empty">جاري التحميل…</p></div>`;
+  document.getElementById('back').onclick=()=>{view='home';render()};
+  const {data,error}=await sb.rpc('visit_stats');
+  const box=document.getElementById('sbox');if(!box)return;
+  if(error||!data){box.innerHTML='<p class="empty">تعذّر تحميل الإحصائيات. اتأكد إنك شغّلت كود الـ SQL الخاص بالزيارات في Supabase.</p>';return}
+  const by=(data.by||[]).map(r=>`<div class="f"><span class="n">${esc(STAGES[r.stage-1]||'—')} · ${esc(TERMS[r.term]||'—')}</span><b>${esc(r.n)}</b></div>`).join('');
+  box.innerHTML=`<div class="stat">
+    <div class="st"><b>${esc(data.today)}</b>زائر النهارده</div>
+    <div class="st"><b>${esc(data.d7)}</b>آخر 7 أيام</div>
+    <div class="st"><b>${esc(data.d30)}</b>آخر 30 يوم</div>
+    <div class="st"><b>${esc(data.total)}</b>الإجمالي</div></div>
+  <h2 class="rh">آخر 30 يوم حسب المرحلة والترم</h2>${by||'<p class="empty">لسه مفيش زيارات.</p>'}
+  <p class="mut" style="margin-top:16px">الأرقام بتعدّ الأجهزة، مش الأشخاص (الطالب اللي بيفتح من موبايل ولاب بيتحسب مرتين).</p>`;
+}
+
+/* ================= ركن المذاكرة: ملخصات + اختبارات + بطاقات ================= */
+const LET=['أ','ب','ج','د','هـ'];
+const LMAP={'أ':0,'ا':0,'إ':0,'آ':0,'A':0,'ب':1,'B':1,'ج':2,'C':2,'د':3,'D':3,'ه':4,'هـ':4,'E':4};
+const Q_RE=/^(?:س|السؤال|سؤال|Q|Question)\s*\d*\s*[:：]\s*(.+)$/i;
+const O_RE=/^(هـ|[أاإآبجده]|[A-Ea-e])\s*[\)\.\-–]\s*(.+)$/;
+const A_RE=/^(?:ج|الاجابة|الإجابة|الاجابه|الإجابه|الجواب|Answer|Ans)\s*[:：]\s*(.+)$/i;
+const E_RE=/^(?:ش|شرح|التفسير|السبب|Explanation|Exp)\s*[:：]\s*(.+)$/i;
+const AI_PROMPT='لخّص المحاضرة دي في نقاط مركزة (حد أقصى 10 نقاط، وكل نقطة تبدأ بـ "- ")، وبعد كده اكتب 10 أسئلة اختيار من متعدد (MCQ) بالصيغة دي بالظبط ومن غير أي كلام زيادة:\n\nس: نص السؤال\nأ) ...\nب) ...\nج) ...\nد) ...\nج: حرف الإجابة الصح\nش: شرح قصير للإجابة\n\nاكتب الملخص الأول، وبعده الأسئلة مباشرة.';
+const aidOf=id=>aids.find(a=>String(a.item_id)===String(id))||null;
+const hasSum=a=>!!(a&&a.summary&&String(a.summary).trim());
+const hasQuiz=a=>!!(a&&Array.isArray(a.quiz)&&a.quiz.length);
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const normLine=l=>l.replace(/\*\*|__|`/g,'').replace(/^[\s>#*•·▪◦\-–]+/,'').trim();
+function getBest(){try{return JSON.parse(ls.get('best')||'{}')||{}}catch(e){return {}}}
+function saveBest(id,s,t){const b=getBest(),k=String(id),o=b[k];
+  if(!o||s/t>o.s/o.t){b[k]={s,t};ls.set('best',JSON.stringify(b))}}
+
+function ansIndex(c){
+  if(c.ans==null)return null;const v=c.ans.trim();
+  const m=v.match(/^(هـ|[أاإآبجده]|[A-Ea-e])(?:\s*[\)\.\-–:]|\s|$)/);
+  if(m){const k=LMAP[m[1].toUpperCase()];if(k!=null)return k}
+  const i=c.o.findIndex(x=>norm(x)===norm(v));return i>=0?i:null;
+}
+function parseAid(txt){
+  const lines=String(txt||'').replace(/\r/g,'').split('\n');
+  const qi=lines.findIndex(l=>Q_RE.test(normLine(l)));
+  const summary=(qi<0?lines:lines.slice(0,qi)).join('\n').trim();
+  const quiz=[],errs=[];let cur=null,n=0;
+  const push=()=>{
+    if(!cur)return;n++;const a=ansIndex(cur);
+    if(cur.o.length<2)errs.push('سؤال '+n+': محتاج اختيارين على الأقل');
+    else if(a==null||a>=cur.o.length)errs.push('سؤال '+n+': الإجابة الصح مش واضحة');
+    else quiz.push({q:cur.q,o:cur.o,a,e:cur.e||''});
+    cur=null};
+  if(qi>=0)lines.slice(qi).forEach(raw=>{
+    const l=normLine(raw);if(!l)return;let m;
+    if(m=l.match(Q_RE)){push();cur={q:m[1].trim(),o:[],ans:null,e:''};return}
+    if(!cur)return;
+    if(m=l.match(A_RE)){cur.ans=m[1].trim();return}
+    if(m=l.match(E_RE)){cur.e=m[1].trim();return}
+    if(m=l.match(O_RE)){cur.o.push(m[2].trim());return}
+    if(cur.e)cur.e+=' '+l;else if(cur.o.length)cur.o[cur.o.length-1]+=' '+l;else cur.q+=' '+l;
+  });
+  push();
+  return {summary,quiz,errs};
+}
+function aidToText(a){
+  let t=a&&a.summary?String(a.summary).trim():'';
+  if(hasQuiz(a)){
+    const qs=a.quiz.map(q=>'س: '+q.q+'\n'+q.o.map((o,k)=>(LET[k]||'؟')+') '+o).join('\n')+'\nج: '+LET[q.a]+(q.e?'\nش: '+q.e:'')).join('\n\n');
+    t+=(t?'\n\n':'')+qs;
+  }
+  return t;
+}
+function mdLite(t){
+  let h='',ul=false;const f=x=>esc(x).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');
+  const close=()=>{if(ul){h+='</ul>';ul=false}};
+  String(t||'').split('\n').forEach(raw=>{
+    const l=raw.trim();let m;
+    if(!l){close();return}
+    if(m=l.match(/^[-•*▪◦]\s+(.+)$/)){if(!ul){h+='<ul class="sum">';ul=true}h+='<li>'+f(m[1])+'</li>';return}
+    close();
+    if(m=l.match(/^#{1,3}\s*(.+)$/)){h+='<h3>'+f(m[1])+'</h3>';return}
+    h+='<p>'+f(l)+'</p>';
+  });
+  close();return h;
+}
+function openAid(id,from){markStudy();curItem=String(id);aidFrom=from||view;aidTab='sum';qz=null;cd={i:0,f:false};view='aid';render()}
+
+function aidView(){
+  const it=items.find(i=>String(i.id)===String(curItem));
+  if(!it){view='home';return render()}
+  const a=aidOf(it.id),hs=hasSum(a),hq=hasQuiz(a);
+  if(aidTab==='sum'&&!hs&&hq)aidTab='quiz';
+  if((aidTab==='quiz'||aidTab==='cards')&&!hq)aidTab='sum';
+  app.innerHTML=`<div class="bar"><button class="g" id="back">→</button><h1>${esc(it.title)}</h1>${admin?'<button class="g" id="aed">✏️</button>':''}</div>
+  <div class="tabs">${hs?`<button data-at="sum" class="${aidTab==='sum'?'on':''}">📄 الملخص</button>`:''}${hq?`<button data-at="quiz" class="${aidTab==='quiz'?'on':''}">❓ اختبر نفسك</button><button data-at="cards" class="${aidTab==='cards'?'on':''}">🃏 بطاقات</button>`:''}</div>
+  <div id="abody"></div>`;
+  document.getElementById('back').onclick=()=>{view=aidFrom||'home';render()};
+  if(admin)document.getElementById('aed').onclick=()=>{view='aided';render()};
+  app.querySelectorAll('[data-at]').forEach(b=>b.onclick=()=>{aidTab=b.dataset.at;qz=null;cd={i:0,f:false};aidView()});
+  const box=document.getElementById('abody');
+  if(!hs&&!hq){box.innerHTML='<p class="empty">لسه مفيش ملخص أو أسئلة للمحاضرة دي.</p>';return}
+  if(aidTab==='sum')box.innerHTML='<div class="sumbox">'+mdLite(a.summary)+'</div>'+(hq?'<button class="go" id="gq" style="width:100%;margin-top:16px">❓ اختبر نفسك على المحاضرة</button>':'');
+  else if(aidTab==='quiz')fillQuiz(a,it);
+  else fillCards(a);
+  const gq=document.getElementById('gq');if(gq)gq.onclick=()=>{aidTab='quiz';aidView()};
+}
+function fillQuiz(a,it){
+  const box=document.getElementById('abody'),Q=a.quiz;
+  if(!qz){
+    const b=getBest()[String(it.id)];
+    box.innerHTML=`<div class="qs res"><div class="big">❓</div><p>${Q.length} سؤال اختيار من متعدد. اختار الإجابة وهتشوف الصح فوراً.</p>${b?`<p class="mut">أفضل نتيجة ليك: <b>${b.s} / ${b.t}</b></p>`:''}<button class="go" id="qstart" style="width:100%">ابدأ الاختبار</button></div>`;
+    document.getElementById('qstart').onclick=()=>{qz={ord:shuffle(Q.map((_,i)=>i)),i:0,score:0,sel:null,wrong:[],mode:'all'};fillQuiz(a,it)};
+    return;
+  }
+  if(qz.i>=qz.ord.length){
+    const tot=qz.ord.length,pct=Math.round(qz.score/tot*100);
+    if(qz.mode==='all'&&!qz.saved){qz.saved=true;saveBest(it.id,qz.score,tot)}
+    box.innerHTML=`<div class="qs res"><div class="big">${pct>=80?'🎉':pct>=50?'👍':'💪'}</div><h2>${qz.score} / ${tot}</h2><p class="mut">${pct}%</p>
+      ${qz.wrong.length?`<button id="qwr" style="width:100%;margin:6px 0">🔁 أعيد الأسئلة اللي غلطت فيها (${qz.wrong.length})</button>`:''}
+      <button class="g" id="qall" style="width:100%;margin:6px 0">من الأول</button>
+      ${qz.wrong.length?'<h3 class="rh">الأسئلة اللي غلطت فيها</h3>'+qz.wrong.map(i=>`<div class="wq"><b>${esc(Q[i].q)}</b><div class="okt">✅ ${esc(Q[i].o[Q[i].a])}</div>${Q[i].e?`<small class="mut">${esc(Q[i].e)}</small>`:''}</div>`).join(''):''}</div>`;
+    const w=document.getElementById('qwr');
+    if(w)w.onclick=()=>{qz={ord:shuffle(qz.wrong),i:0,score:0,sel:null,wrong:[],mode:'wrong'};fillQuiz(a,it)};
+    document.getElementById('qall').onclick=()=>{qz=null;fillQuiz(a,it)};
+    return;
+  }
+  const qi=qz.ord[qz.i],q=Q[qi];
+  box.innerHTML=`<div class="qs"><div class="pt"><span>سؤال ${qz.i+1} من ${qz.ord.length}</span><b>✅ ${qz.score}</b></div><div class="pbar"><i style="width:${Math.round(qz.i/qz.ord.length*100)}%"></i></div>
+    <h2 class="qq">${esc(q.q)}</h2>${q.o.map((o,k)=>`<button class="opt qo" data-o="${k}">${esc(o)}</button>`).join('')}<div id="qfb"></div></div>`;
+  box.querySelectorAll('.qo').forEach(b=>b.onclick=()=>{
+    if(qz.sel!=null)return;const k=+b.dataset.o;qz.sel=k;
+    box.querySelectorAll('.qo').forEach(x=>{const j=+x.dataset.o;if(j===q.a)x.classList.add('ok');else if(j===k)x.classList.add('bad')});
+    if(k===q.a)qz.score++;else qz.wrong.push(qi);
+    const last=qz.i===qz.ord.length-1;
+    document.getElementById('qfb').innerHTML=`<div class="fb">${k===q.a?'🎉 إجابة صح!':'❌ الإجابة الصح: <b>'+esc(q.o[q.a])+'</b>'}${q.e?`<p class="mut" style="margin:6px 0 0">${esc(q.e)}</p>`:''}</div><button id="qnx" style="width:100%">${last?'شوف النتيجة':'التالي'}</button>`;
+    document.getElementById('qnx').onclick=()=>{qz.i++;qz.sel=null;fillQuiz(a,it)};
+  });
+}
+function fillCards(a){
+  const box=document.getElementById('abody'),Q=a.quiz,q=Q[cd.i];
+  box.innerHTML=`<div class="pt"><span>بطاقة ${cd.i+1} من ${Q.length}</span></div>
+  <div class="card${cd.f?' back':''}" id="card">${cd.f?`<small class="mut">الإجابة</small><b>${esc(q.o[q.a])}</b>${q.e?`<small class="mut">${esc(q.e)}</small>`:''}`:`<small class="mut">السؤال</small><b>${esc(q.q)}</b><small class="mut">اضغط لإظهار الإجابة</small>`}</div>
+  <div class="gnav"><button class="g" id="cp"${cd.i?'':' disabled'}>السابق</button><button id="cn"${cd.i<Q.length-1?'':' disabled'}>التالي</button></div>`;
+  document.getElementById('card').onclick=()=>{cd.f=!cd.f;fillCards(a)};
+  document.getElementById('cp').onclick=()=>{if(cd.i>0){cd.i--;cd.f=false;fillCards(a)}};
+  document.getElementById('cn').onclick=()=>{if(cd.i<Q.length-1){cd.i++;cd.f=false;fillCards(a)}};
+}
+function aidEditor(){
+  const it=items.find(i=>String(i.id)===String(curItem));
+  if(!it){view='home';return render()}
+  const a=aidOf(it.id);
+  app.innerHTML=`<div class="bar"><button class="g" id="back">→</button><h1>🧠 ${esc(it.title)}</h1></div>
+  <p class="mut">الصق هنا الملخص والأسئلة اللي طلعت من الـ AI. اللي قبل أول «س:» بيتحسب ملخص، والباقي أسئلة.</p>
+  <div class="adm"><button class="g" id="cpp">📋 انسخ البرومبت للـ AI</button></div>
+  <textarea id="aid" dir="auto" rows="16" placeholder="- نقطة مهمة 1&#10;- نقطة مهمة 2&#10;&#10;س: نص السؤال&#10;أ) ...&#10;ب) ...&#10;ج) ...&#10;د) ...&#10;ج: ب&#10;ش: شرح قصير">${esc(aidToText(a))}</textarea>
+  <div id="aidchk" class="mut" style="margin:6px 0"></div>
+  <div class="adm"><button id="asave">💾 حفظ</button>${a?'<button class="d" id="adel">🗑 حذف</button>':''}</div>`;
+  const ta=document.getElementById('aid'),chk=document.getElementById('aidchk');
+  const upd=()=>{const r=parseAid(ta.value);
+    chk.innerHTML='ملخص: '+(r.summary?'✅':'—')+' · أسئلة متفهمة: <b>'+r.quiz.length+'</b>'+(r.errs.length?'<br>⚠️ '+r.errs.map(esc).join('<br>⚠️ '):'')};
+  ta.oninput=upd;upd();
+  document.getElementById('back').onclick=()=>{view=aidFrom||'subject';if(view==='aided')view='subject';render()};
+  document.getElementById('cpp').onclick=async()=>{
+    try{await navigator.clipboard.writeText(AI_PROMPT);alert('اتنسخ ✅ الصقه في أي AI مع نص المحاضرة.')}
+    catch(e){prompt('انسخ البرومبت ده:',AI_PROMPT)}};
+  document.getElementById('asave').onclick=async()=>{
+    const r=parseAid(ta.value);
+    if(!r.summary&&!r.quiz.length)return alert('مفيش ملخص ولا أسئلة متفهمة.');
+    if(r.errs.length&&!confirm('فيه أسئلة فيها مشاكل وهتتتجاهل:\n'+r.errs.join('\n')+'\nتكمّل؟'))return;
+    const {error}=await sb.from('aids').upsert({item_id:String(it.id),subject_id:String(it.subject_id),summary:r.summary,quiz:r.quiz,updated_at:new Date().toISOString()},{onConflict:'item_id'});
+    if(error)return fail(error);
+    aidFrom=aidFrom==='aided'?'subject':aidFrom;view='aid';reload()};
+  const del=document.getElementById('adel');
+  if(del)del.onclick=async()=>{
+    if(!confirm('حذف الملخص والأسئلة؟'))return;
+    const {error}=await sb.from('aids').delete().eq('item_id',String(it.id));
+    if(error)return fail(error);view='subject';reload()};
+}
+function hubView(){
+  const vm=new Map(vis().map(s=>[String(s.id),s]));
+  const list=items.filter(i=>vm.has(String(i.subject_id))&&aidOf(i.id));
+  app.innerHTML=`<div class="bar"><button class="g" id="back">→</button><h1>🧠 ركن المذاكرة</h1></div>
+  ${list.length?list.map(i=>{const a=aidOf(i.id),b=getBest()[String(i.id)];
+    return `<div class="f" data-h="${esc(i.id)}" style="cursor:pointer"><span class="n">${esc(i.title)} <small class="mut">· ${esc(vm.get(String(i.subject_id)).name)}</small></span><small class="mut">${hasSum(a)?'📄 ':''}${hasQuiz(a)?'❓ '+a.quiz.length:''}${b?' · 🏆 '+b.s+'/'+b.t:''}</small></div>`}).join(''):'<p class="empty">لسه مفيش ملخصات أو أسئلة لمرحلتك وترمك.</p>'}`;
+  document.getElementById('back').onclick=()=>{view='home';render()};
+  app.querySelectorAll('[data-h]').forEach(r=>r.onclick=()=>openAid(r.dataset.h,'hub'));
+}
+
+/* ================= جدول المذاكرة ================= */
+const DAYN=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+const pad2=n=>String(n).padStart(2,'0');
+const ymd=d=>d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate());
+const pdate=s=>{const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(s||'');return m?new Date(+m[1],+m[2]-1,+m[3]):null};
+const addDays=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x};
+const today0=()=>{const d=new Date();return new Date(d.getFullYear(),d.getMonth(),d.getDate())};
+const diffDays=(a,b)=>Math.round((b-a)/864e5);
+function loadPlan(){
+  try{const v=JSON.parse(ls.get('plan')||'null');
+    if(v&&Array.isArray(v.exams))pl={
+      exams:v.exams.slice(0,20).map(e=>({id:String(e.id),name:String(e.name||''),date:String(e.date||''),sid:e.sid?String(e.sid):'',n:+e.n||0})),
+      perDay:Math.min(20,Math.max(1,+v.perDay||3)),
+      off:Array.isArray(v.off)?v.off.filter(x=>x>=0&&x<=6):[5]}}catch(e){}
+}
+const savePlan=()=>ls.set('plan',JSON.stringify(pl));
+function lecturesOf(e){
+  if(e.sid){
+    let its=items.filter(i=>String(i.subject_id)===e.sid&&i.kind==='slides');
+    if(!its.length)its=items.filter(i=>String(i.subject_id)===e.sid);
+    if(its.length)return its.filter(i=>!done.has(String(i.id))).map(i=>i.title);
+  }
+  return Array.from({length:e.n||0},(_,k)=>'محاضرة '+(k+1));
+}
+function schedule(mode){
+  const t0=today0();
+  const ex=pl.exams.map(e=>({e,D:pdate(e.date),L:lecturesOf(e).slice()})).filter(x=>x.D&&x.D>t0).sort((a,b)=>a.D-b.D);
+  if(!ex.length)return {days:[],short:[],ex};
+  const n=diffDays(t0,ex[ex.length-1].D),days=[];
+  for(let k=0;k<n;k++){const d=addDays(t0,k);days.push({d,s:ymd(d),cap:pl.off.includes(d.getDay())?0:pl.perDay,tasks:[],rev:[]})}
+  ex.forEach(x=>{
+    const k=diffDays(t0,x.D)-1;
+    if(k>0){x.end=k-1;days[k].rev.push(x.e);days[k].cap=Math.max(0,days[k].cap-1)}else x.end=0;
+  });
+  days.forEach((day,k)=>{
+    let cap=day.cap;
+    while(cap>0){
+      const c=ex.filter(x=>x.L.length&&x.end>=k);if(!c.length)break;
+      const u=x=>{let z=cap;for(let j=k+1;j<=x.end;j++)z+=days[j].cap;return x.L.length/Math.max(1,z)};
+      const pick=mode==='edf'?c[0]:c.reduce((b,x)=>u(x)>u(b)+1e-9?x:b,c[0]);
+      let t=day.tasks.find(t=>t.e===pick.e);
+      if(!t){t={e:pick.e,names:[]};day.tasks.push(t)}
+      t.names.push(pick.L.shift());cap--;
+    }
+  });
+  return {days,short:ex.filter(x=>x.L.length).map(x=>({e:x.e,n:x.L.length})),ex};
+}
+function bestSchedule(){
+  const a=schedule('mix'),b=schedule('edf'),s=r=>r.short.reduce((z,x)=>z+x.n,0);
+  return s(b)<s(a)?b:a;
+}
+const tkey=(day,e,rev)=>day.s+'|'+e.id+(rev?'|rev':'');
+function todayPending(){
+  if(!pl.exams.length)return 0;
+  const r=bestSchedule(),d=r.days[0];if(!d)return 0;
+  return d.tasks.filter(t=>!plDone.has(tkey(d,t.e))).length+d.rev.filter(e=>!plDone.has(tkey(d,e,1))).length;
+}
+function dayLabel(k,d){return (k===0?'النهارده':k===1?'بكرة':DAYN[d.getDay()])+' · '+d.getDate()+'/'+(d.getMonth()+1)}
+function planHtml(){
+  if(!pl.exams.length)return '<p class="empty">ضيف امتحاناتك ومواعيدها، وهتظهرلك الخطة هنا.</p>';
+  const r=bestSchedule();
+  if(!r.ex.length)return '<p class="empty">كل الامتحانات اللي ضفتها فاتت أو النهارده. ضيف امتحان جديد.</p>';
+  const warn=r.short.map(x=>`<div class="warn">⚠️ مش هتلحق ${x.n} محاضرة من <b>${esc(x.e.name)}</b> قبل الامتحان. زوّد عدد المحاضرات في اليوم أو قلّل أيام الراحة.</div>`).join('');
+  const total=r.days.reduce((z,d)=>z+d.tasks.reduce((y,t)=>y+t.names.length,0),0);
+  const rows=r.days.map((d,k)=>({d,k})).filter(x=>x.d.tasks.length||x.d.rev.length).map(({d,k})=>{
+    const tk=d.tasks.map(t=>{const key=tkey(d,t.e),dn=plDone.has(key);
+      return `<div class="tk${dn?' dn':''}"><button class="chk" data-pk="${esc(key)}">${dn?'✅':'⬜'}</button><span>📖 <b>${esc(t.e.name)}</b>: ${t.names.map(esc).join('، ')}</span></div>`}).join('');
+    const rv=d.rev.map(e=>{const key=tkey(d,e,1),dn=plDone.has(key);
+      return `<div class="tk${dn?' dn':''}"><button class="chk" data-pk="${esc(key)}">${dn?'✅':'⬜'}</button><span>🔁 مراجعة <b>${esc(e.name)}</b> (الامتحان بعد يوم)</span></div>`}).join('');
+    return `<div class="day${k===0?' today':''}"><h3>${dayLabel(k,d.d)}</h3>${tk}${rv}</div>`}).join('');
+  return warn+`<p class="mut" style="margin:4px 0 8px">${total} محاضرة متبقية موزعة على الأيام. علّم ✅ على المحاضرة في المادة نفسها وهتتحدّث الخطة.</p>`+(rows||'<p class="empty">مفيش مهام جديدة.</p>');
+}
+function examsHtml(){
+  if(!pl.exams.length)return '<p class="mut">لسه مضفتش امتحانات.</p>';
+  const t0=today0();
+  return pl.exams.slice().sort((a,b)=>String(a.date).localeCompare(b.date)).map(e=>{
+    const D=pdate(e.date),left=D?diffDays(t0,D):null,n=lecturesOf(e).length;
+    return `<div class="f"><span class="n"><b>${esc(e.name)}</b> <small class="mut">· ${D?D.getDate()+'/'+(D.getMonth()+1):'—'} · ${left==null?'':left>0?'باقي '+left+' يوم':left===0?'النهارده':'فات'} · ${n} محاضرة متبقية</small></span><button class="d" data-xe="${esc(e.id)}">✕</button></div>`}).join('');
+}
+function planView(){
+  app.innerHTML=`<div class="bar"><button class="g" id="back">→</button><h1>📅 جدول المذاكرة</h1></div>
+  <div class="form"><b>إعداداتك</b>
+    <label class="lbl">عدد المحاضرات اللي تقدر تذاكرها في اليوم</label>
+    <input id="ppd" type="number" min="1" max="20" inputmode="numeric" value="${pl.perDay}">
+    <label class="lbl">أيام الراحة (من غير محاضرات جديدة)</label>
+    <div class="chips">${[6,0,1,2,3,4,5].map(d=>`<button class="opt chip${pl.off.includes(d)?' on':''}" data-off="${d}">${DAYN[d]}</button>`).join('')}</div></div>
+  <h2 class="rh">الامتحانات</h2><div id="exl"></div>
+  <div class="form"><b>＋ إضافة امتحان</b>
+    <select id="exs"><option value="">اختار المادة…</option>${vis().map(s=>`<option value="${esc(s.id)}">${esc(s.name)}</option>`).join('')}<option value="_">مادة تانية (اكتب اسمها)</option></select>
+    <input id="exn" placeholder="اسم المادة" hidden>
+    <input id="exd" type="date" dir="ltr" min="${ymd(addDays(today0(),1))}">
+    <input id="exc" type="number" min="1" max="200" inputmode="numeric" placeholder="عدد المحاضرات (لمادة مش في التطبيق)">
+    <button id="exa">إضافة</button></div>
+  <h2 class="rh">خطتك</h2><div id="plan"></div>`;
+  const fill=()=>{
+    document.getElementById('exl').innerHTML=examsHtml();
+    document.getElementById('plan').innerHTML=planHtml();
+    app.querySelectorAll('[data-xe]').forEach(b=>b.onclick=()=>{
+      if(!confirm('حذف الامتحان؟'))return;
+      pl.exams=pl.exams.filter(e=>e.id!==b.dataset.xe);savePlan();fill()});
+    app.querySelectorAll('[data-pk]').forEach(b=>b.onclick=()=>{
+      const k=b.dataset.pk;plDone.has(k)?plDone.delete(k):plDone.add(k);saveSet('plandone',plDone);fill()});
+  };
+  document.getElementById('back').onclick=()=>{view='home';render()};
+  document.getElementById('ppd').oninput=e=>{const v=Math.min(20,Math.max(1,parseInt(toEn(e.target.value))||1));pl.perDay=v;savePlan();fill()};
+  app.querySelectorAll('[data-off]').forEach(b=>b.onclick=()=>{
+    const d=+b.dataset.off;pl.off=pl.off.includes(d)?pl.off.filter(x=>x!==d):pl.off.concat(d);savePlan();b.classList.toggle('on');fill()});
+  const sel=document.getElementById('exs');
+  sel.onchange=()=>{document.getElementById('exn').hidden=sel.value!=='_'};
+  document.getElementById('exa').onclick=()=>{
+    const sv=sel.value;if(!sv)return alert('اختار المادة الأول.');
+    const date=document.getElementById('exd').value,D=pdate(date);
+    if(!D||D<=today0())return alert('اختار تاريخ امتحان جاي (من بكرة).');
+    let name,sid='';
+    if(sv==='_'){name=document.getElementById('exn').value.trim();if(!name)return alert('اكتب اسم المادة.')}
+    else{const s=subs.find(x=>String(x.id)===sv);name=s?s.name:'مادة';sid=sv}
+    const n=parseInt(toEn(document.getElementById('exc').value))||0;
+    const e={id:Date.now().toString(36)+Math.random().toString(36).slice(2,5),name,date,sid,n};
+    if(!lecturesOf(e).length)return alert('المادة دي مفيهاش ملفات في التطبيق. اكتب عدد المحاضرات.');
+    pl.exams.push(e);savePlan();
+    sel.value='';document.getElementById('exn').hidden=true;document.getElementById('exn').value='';document.getElementById('exd').value='';document.getElementById('exc').value='';
+    fill()};
+  fill();
+}
+
+/* ================= ميزات جديدة: ملاحظات · بلاغات · اقتراحات · سلسلة مذاكرة · بومودورو ================= */
+const dayKey=t=>new Date(t||Date.now()).toLocaleDateString('en-CA');
+let reports=[];
+function modal(html,bind){const c=document.getElementById('ch');if(!c)return;c.innerHTML='<div class="chs">'+html+'</div>';c.hidden=false;c.onclick=e=>{if(e.target===c)closeChoice()};if(bind)bind()}
+
+/* --- ملاحظات شخصية (بتتحفظ على جهاز الطالب بس) --- */
+function getNotes(){try{return JSON.parse(ls.get('notes')||'{}')||{}}catch(e){return {}}}
+function hasNote(id){return !!String(getNotes()[id]||'').trim()}
+function noteModal(id){
+  const it=items.find(i=>String(i.id)===String(id));if(!it)return;
+  modal(`<h3>📝 ${esc(it.title)}</h3><textarea id="nt" rows="7" dir="auto" maxlength="3000" placeholder="اكتب ملاحظاتك على المحاضرة دي… بتتحفظ على جهازك بس.">${esc(getNotes()[id]||'')}</textarea><button id="nts">حفظ</button><button class="g" id="ntx">إغلاق</button>`,()=>{
+    document.getElementById('nts').onclick=()=>{const v=document.getElementById('nt').value.trim(),o=getNotes();v?o[id]=v:delete o[id];ls.set('notes',JSON.stringify(o));closeChoice();refresh()};
+    document.getElementById('ntx').onclick=closeChoice});
+}
+
+/* --- بلاغ لينك مش شغال --- */
+async function loadReports(){
+  if(!admin){reports=[];return}
+  try{const r=await sb.from('reports').select('*').order('created_at',{ascending:false}).limit(300);reports=r.error?[]:(r.data||[])}catch(e){reports=[]}
+}
+function reportModal(id){
+  const it=items.find(i=>String(i.id)===String(id));if(!it)return;
+  const k='rp_'+id;
+  if(ls.get(k)===dayKey())return alert('بلّغت عن الملف ده النهارده، شكرًا ليك 🙏');
+  modal(`<h3>⚠️ بلّغ عن مشكلة في «${esc(it.title)}»</h3><p class="mut" style="text-align:center;margin:0">اللينك مش بيفتح أو الملف غلط؟ البلاغ هيوصل لصاحب التطبيق.</p><textarea id="rn" rows="3" maxlength="300" dir="auto" placeholder="تفاصيل (اختياري)"></textarea><button id="rs">إرسال البلاغ</button><button class="g" id="rx">إلغاء</button>`,()=>{
+    document.getElementById('rx').onclick=closeChoice;
+    document.getElementById('rs').onclick=async ev=>{
+      ev.target.disabled=true;
+      const {error}=await sb.from('reports').insert({kind:'broken',item_id:String(it.id),subject_id:String(it.subject_id),title:String(it.title).slice(0,200),note:document.getElementById('rn').value.trim().slice(0,300),device:devId()});
+      if(error){ev.target.disabled=false;return alert('تعذّر الإرسال. اتأكد من النت وجرّب تاني.')}
+      ls.set(k,dayKey());closeChoice();alert('وصل البلاغ، شكرًا ليك 🙏')}});
+}
+
+/* --- صندوق الاقتراحات --- */
+function sugView(){
+  app.innerHTML=`<div class="bar"><button class="g" id="back">→</button><h1>💡 اقتراح</h1></div><p class="mut">عندك فكرة تحسّن التطبيق، أو ملاحظة؟ اكتبها وهتوصل لصاحب التطبيق.</p><textarea id="sg" rows="6" maxlength="500" dir="auto" placeholder="اكتب اقتراحك…"></textarea><button id="sgs" style="width:100%">إرسال</button>`;
+  document.getElementById('back').onclick=()=>{view='home';render()};
+  document.getElementById('sgs').onclick=async ev=>{
+    const t=document.getElementById('sg').value.trim();if(!t)return alert('اكتب اقتراحك الأول.');
+    if(Date.now()-(+ls.get('sgt')||0)<30000)return alert('استنى شوية قبل ما تبعت اقتراح تاني.');
+    ev.target.disabled=true;
+    const {error}=await sb.from('reports').insert({kind:'suggestion',note:t.slice(0,500),device:devId()});
+    ev.target.disabled=false;
+    if(error)return alert('تعذّر الإرسال. اتأكد من النت وجرّب تاني.');
+    ls.set('sgt',String(Date.now()));alert('وصل اقتراحك، شكرًا ليك 🙏');view='home';render()};
+}
+
+/* --- لوحة البلاغات (لصاحب التطبيق بس) --- */
+function inboxGroups(){
+  const g=[],m={};
+  reports.forEach(r=>{
+    if(r.kind==='broken'&&r.item_id){
+      if(!m[r.item_id]){m[r.item_id]={kind:'broken',subject_id:r.subject_id,title:r.title,notes:[],ids:[],n:0,at:r.created_at};g.push(m[r.item_id])}
+      const x=m[r.item_id];x.n++;x.ids.push(r.id);if(r.note&&x.notes.length<3)x.notes.push(r.note);
+    }else g.push({kind:r.kind,subject_id:r.subject_id,title:r.title,notes:r.note?[r.note]:[],ids:[r.id],n:1,at:r.created_at});
+  });
+  return g;
+}
+function inboxView(){
+  const g=inboxGroups();
+  app.innerHTML=`<div class="bar"><button class="g" id="back">→</button><h1>📥 البلاغات والاقتراحات</h1></div>`+(g.length?g.map((x,i)=>`<div class="rp"><b>${x.kind==='broken'?'⚠️ لينك مش شغال':'💡 اقتراح'}${x.n>1?' · '+x.n+' بلاغات':''}</b>${x.title?`<div>${esc(x.title)}</div>`:''}${x.notes.map(n=>`<p>${esc(n)}</p>`).join('')}<small class="mut">${new Date(x.at).toLocaleDateString('ar-EG')}</small><div class="adm" style="margin:8px 0 0">${x.kind==='broken'&&subs.find(s=>String(s.id)===String(x.subject_id))?`<button class="g" data-os="${i}">فتح المادة</button>`:''}<button class="g" data-rd="${i}">✓ تم</button></div></div>`).join(''):'<p class="empty">مفيش بلاغات ولا اقتراحات 🎉</p>');
+  document.getElementById('back').onclick=()=>{view='home';render()};
+  app.querySelectorAll('[data-os]').forEach(b=>b.onclick=()=>{const x=g[+b.dataset.os],s=subs.find(s=>String(s.id)===String(x.subject_id));if(s){cur=s.id;view='subject';qs='';render()}});
+  app.querySelectorAll('[data-rd]').forEach(b=>b.onclick=async()=>{
+    const x=g[+b.dataset.rd],{error}=await sb.from('reports').delete().in('id',x.ids);
+    if(error)return fail(error);await loadReports();render()});
+}
+
+/* --- 🔥 أيام مذاكرة متتالية --- */
+function getStreak(){try{return JSON.parse(ls.get('streak')||'{}')||{}}catch(e){return {}}}
+function streakNow(){const s=getStreak();return(s.last===dayKey()||s.last===dayKey(Date.now()-864e5))?(s.n||0):0}
+const studiedToday=()=>getStreak().last===dayKey();
+function markStudy(){
+  const s=getStreak(),t=dayKey();if(s.last===t)return;
+  s.n=(s.last===dayKey(Date.now()-864e5)?(s.n||0):0)+1;s.last=t;s.best=Math.max(s.best||0,s.n);
+  ls.set('streak',JSON.stringify(s));
+}
+
+/* --- ⏱️ بومودورو (بيحسب الوقت بالساعة الفعلية فمبيتأخرش لو الشاشة قفلت) --- */
+const pm={mode:'focus',len:{focus:25,brk:5},left:1500,end:0,run:false,t:null,msg:''};
+const fmt=s=>String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+function pmGet(){try{const v=JSON.parse(ls.get('pomo')||'{}');return v.d===dayKey()?(v.n||0):0}catch(e){return 0}}
+function beep(){try{const a=new (window.AudioContext||window.webkitAudioContext)(),o=a.createOscillator(),g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.value=880;g.gain.value=.15;o.start();setTimeout(()=>{o.stop();a.close()},600)}catch(e){}}
+function pomoPaint(){
+  const a=document.getElementById('pmt');if(!a)return;
+  a.textContent=fmt(pm.left);
+  document.getElementById('pmm').textContent=pm.mode==='focus'?'🎯 وقت التركيز':'☕ استراحة';
+  document.getElementById('pms').textContent=pm.run?'⏸ إيقاف مؤقت':'▶ ابدأ';
+  document.getElementById('pmi').textContent=(pm.msg?pm.msg+' · ':'')+'جلسات النهارده: '+pmGet()+' · 🔥 '+streakNow()+' يوم';
+}
+function pmFinish(){
+  pm.run=false;clearInterval(pm.t);pm.t=null;
+  if(pm.mode==='focus'){markStudy();ls.set('pomo',JSON.stringify({d:dayKey(),n:pmGet()+1}));pm.msg='✅ خلصت جلسة! خد استراحة'}
+  else pm.msg='☕ الاستراحة خلصت، يلا نكمل';
+  try{navigator.vibrate&&navigator.vibrate([300,150,300])}catch(e){}
+  beep();
+  pm.mode=pm.mode==='focus'?'break':'focus';
+  pm.left=(pm.mode==='focus'?pm.len.focus:pm.len.brk)*60;pomoPaint();
+}
+function pmTick(){pm.left=Math.max(0,Math.round((pm.end-Date.now())/1000));if(pm.left<=0)return pmFinish();pomoPaint()}
+function pomoView(){
+  app.innerHTML=`<div class="bar"><button class="g" id="back">→</button><h1>⏱️ بومودورو</h1></div>
+  <div class="pmw"><div class="pmm" id="pmm"></div><div class="pmt" id="pmt"></div><div class="mut" id="pmi"></div></div>
+  <div class="qa"><button id="pms"></button><button class="g" id="pmr">↺ إعادة</button></div>
+  <label class="lbl">اختار مدة الجلسة</label>
+  <div class="qa"><button class="opt${pm.len.focus===25?' on':''}" data-pp="25-5">25 دقيقة + راحة 5</button><button class="opt${pm.len.focus===50?' on':''}" data-pp="50-10">50 دقيقة + راحة 10</button></div>
+  <p class="mut">خلّي الشاشة مفتوحة عشان تسمع التنبيه. كل جلسة تركيز بتحسب يوم مذاكرة في سلسلة 🔥.</p>`;
+  document.getElementById('back').onclick=()=>{view='home';render()};
+  document.getElementById('pms').onclick=()=>{
+    if(pm.run){pm.left=Math.max(0,Math.round((pm.end-Date.now())/1000));pm.run=false;clearInterval(pm.t)}
+    else{pm.run=true;pm.msg='';pm.end=Date.now()+pm.left*1000;pm.t=setInterval(pmTick,500)}
+    pomoPaint()};
+  document.getElementById('pmr').onclick=()=>{pm.run=false;clearInterval(pm.t);pm.mode='focus';pm.left=pm.len.focus*60;pm.msg='';pomoPaint()};
+  app.querySelectorAll('[data-pp]').forEach(b=>b.onclick=()=>{
+    if(pm.run)return alert('وقّف المؤقت الأول.');
+    const [f,k]=b.dataset.pp.split('-').map(Number);pm.len={focus:f,brk:k};pm.mode='focus';pm.left=f*60;pm.msg='';
+    app.querySelectorAll('[data-pp]').forEach(x=>x.classList.toggle('on',x===b));pomoPaint()});
+  pomoPaint();
+}
+
+(async()=>{
+  try{
+    loadSel();loadGpa();loadPlan();plDone=loadSet('plandone');done=loadSet('done');fav=loadSet('fav');seen=ls.get('seen')==='2';
+    sb=supabase.createClient(SB_URL,SB_KEY);
+    try{const {data}=await sb.auth.getSession();admin=!!(data&&data.session)}catch(e){admin=false}
+    if(await load()){await loadReports();render();logVisit()}
+  }catch(e){app.innerHTML='<p class="empty">حصلت مشكلة في التحميل. جرّب تحدّث الصفحة.</p>'}
+})();
+try{if(history.state&&history.state.pl)history.replaceState(null,'')}catch(e){}
+window.addEventListener('online',()=>{reload()});
+window.addEventListener('offline',()=>setOffline(true));
+if('serviceWorker' in navigator&&/^https?:/.test(location.protocol))
+  window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})});
+</script>
+</body>
+</html>
