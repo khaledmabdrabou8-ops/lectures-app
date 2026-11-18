@@ -177,7 +177,7 @@ const GUIDE=[
  {i:'🌙',t:'داكن وبدون إنترنت',p:'غيّر المظهر من زرار 🌙. وبعد ما تفتح التطبيق مرة بنت، الجدول والمواد والملخصات بتفضل شغالة حتى لو النت قطع (الفيديوهات بس محتاجة نت).'},
  {i:'📲',t:'ضيفه على شاشتك',p:'أندرويد: من قايمة المتصفح ⋮ اختار «تثبيت التطبيق». آيفون: من Safari اضغط مشاركة ثم «إضافة إلى الشاشة الرئيسية».'}
 ];
-let offline=false,sb,subs=[],items=[],aids=[],ann='',cur=null,tab='slides',admin=false,view='home',stage=null,term=null,tmpS=null,tmpT=null,q='',qs='',gi=0;
+let offline=false,sb,subs=[],items=[],aids=[],ann='',anns=[],adminStage=null,cur=null,tab='slides',admin=false,view='home',stage=null,term=null,tmpS=null,tmpT=null,q='',qs='',gi=0;
 let done=new Set(),fav=new Set(),seen=false,gp={rows:[],ph:'',pg:''};
 let curItem=null,aidFrom='home',aidTab='sum',qz=null,cd={i:0,f:false},pl={exams:[],perDay:3,off:[5]},plDone=new Set();
 
@@ -226,25 +226,41 @@ function logVisit(){
 }
 
 function setOffline(v){offline=v;const b=document.getElementById('offb');if(b)b.hidden=!v}
+/* إعلان المرحلة الحالية، ولو مفيش بيطلع الإعلان العام */
+function annFor(){const a=anns.find(x=>x.stage===stage)||anns.find(x=>x.stage==null);return(a&&a.body)||''}
+/* صلاحيات الأدمن: adminStage = رقم المرحلة، أو null لو أدمن عام */
+async function loadAdmin(){
+  admin=false;adminStage=null;
+  try{
+    const {data:{session}}=await sb.auth.getSession();
+    if(!session)return false;
+    const r=await sb.from('admins').select('stage').eq('user_id',session.user.id).maybeSingle();
+    if(r.error)return false;
+    if(!r.data){await sb.auth.signOut();return 'noadmin'}
+    admin=true;adminStage=r.data.stage==null?null:+r.data.stage;
+    if(adminStage){tmpS=adminStage;if(stage!==adminStage){stage=adminStage;if(term)saveSel()}}
+    return true;
+  }catch(e){admin=false;adminStage=null;return false}
+}
 async function load(){
   let a,b,c,d;
   try{
     [a,b,c,d]=await Promise.all([
       sb.from('subjects').select('*').order('created_at'),
       sb.from('items').select('*').order('created_at'),
-      sb.from('announcements').select('body').order('created_at',{ascending:false}).limit(1),
+      sb.from('announcements').select('body,stage').order('created_at',{ascending:false}).limit(50),
       sb.from('aids').select('*')]);
   }catch(e){a=b=c=d={error:e}}
   if(a.error||b.error){
     try{
       const sn=JSON.parse(ls.get('snap')||'null');
-      if(sn&&Array.isArray(sn.subs)&&Array.isArray(sn.items)){subs=sn.subs;items=sn.items;ann=sn.ann||'';aids=Array.isArray(sn.aids)?sn.aids:[];setOffline(true);return true}
+      if(sn&&Array.isArray(sn.subs)&&Array.isArray(sn.items)){subs=sn.subs;items=sn.items;anns=Array.isArray(sn.anns)?sn.anns:(sn.ann?[{body:sn.ann,stage:null}]:[]);aids=Array.isArray(sn.aids)?sn.aids:[];setOffline(true);return true}
     }catch(e){}
     app.innerHTML='<p class="empty">تعذّر تحميل البيانات. اتأكد من الاتصال بالإنترنت وجرّب تاني.</p>';return false}
   subs=a.data;items=b.data;
-  ann=(!c.error&&c.data&&c.data[0]&&c.data[0].body)||'';
+  anns=(!c.error&&Array.isArray(c.data))?c.data:[];
   aids=(!d.error&&Array.isArray(d.data))?d.data:[];
-  ls.set('snap',JSON.stringify({subs,items,ann,aids}));
+  ls.set('snap',JSON.stringify({subs,items,anns,aids}));
   setOffline(false);return true;
 }
 async function reload(){if(await load()){await loadReports();render()}}
@@ -409,20 +425,21 @@ function fillRes(){
   bindFiles();
 }
 function home(){
+  ann=annFor();
   const fc=items.filter(i=>fav.has(String(i.id))).length;
   const vsid=new Set(vis().map(s=>String(s.id))),hc=items.filter(i=>vsid.has(String(i.subject_id))&&aidOf(i.id)).length,tp=todayPending();
   app.innerHTML=`<div class="bar"><h1>📚 محاضراتي</h1><button class="g ic stk${studiedToday()?'':' cold'}" id="stk" aria-label="سلسلة المذاكرة" title="أيام مذاكرة متتالية">🔥 ${streakNow()}</button><button class="g ic" id="qgd" aria-label="دليل الاستخدام">❓</button>${thmBtn()}</div>
   <button class="g chg" id="chg">${STAGES[stage-1]} · ${TERMS[term]} ⇄</button>
   ${ann?`<div class="ann">📢 ${esc(ann)}</div>`:''}
   <div class="qa"><button class="g" id="qfav">⭐ المفضلة${fc?' ('+fc+')':''}</button><button class="g" id="qhub">🧠 المذاكرة${hc?' ('+hc+')':''}</button><button class="g" id="qplan">📅 جدول المذاكرة${tp?' ('+tp+')':''}</button><button class="g" id="qgpa">🎓 المعدل</button><button class="g" id="qpm">⏱️ بومودورو</button><button class="g" id="qsg">💡 اقتراح</button></div>
-  ${admin?`<div class="adm"><button class="g" id="annb">📢 ${ann?'تعديل الإعلان':'إضافة إعلان'}</button><button class="g" id="stb">📊 الإحصائيات</button><button class="g" id="inb">📥 البلاغات${reports.length?' ('+reports.length+')':''}</button></div>`:''}
+  ${admin?`<p class="mut" style="margin:0 0 8px">👤 أدمن ${adminStage?esc(STAGES[adminStage-1]):'عام (كل المراحل)'}</p><div class="adm"><button class="g" id="annb">📢 ${ann?'تعديل الإعلان':'إضافة إعلان'}</button><button class="g" id="stb">📊 الإحصائيات</button><button class="g" id="inb">📥 البلاغات${reports.length?' ('+reports.length+')':''}</button></div>`:''}
   <input id="q" type="search" dir="auto" placeholder="🔎 ابحث عن مادة أو محاضرة…" value="${esc(q)}" autocomplete="off">
   <div id="res"></div>
   <div class="foot"><button class="g" id="lock">${admin?'تسجيل الخروج':'🔒 دخول صاحب التطبيق'}</button></div>`;
   bindTheme();
   document.getElementById('q').oninput=e=>{q=e.target.value;fillRes()};
   fillRes();
-  document.getElementById('chg').onclick=()=>{clearSel();render()};
+  document.getElementById('chg').onclick=()=>{clearSel();if(adminStage)tmpS=adminStage;render()};
   document.getElementById('qfav').onclick=()=>{view='fav';render()};
   document.getElementById('qgpa').onclick=()=>{view='gpa';render()};
   document.getElementById('qhub').onclick=()=>{view='hub';render()};
@@ -432,11 +449,13 @@ function home(){
   document.getElementById('qpm').onclick=()=>{view='pomo';render()};
   document.getElementById('qsg').onclick=()=>{view='sug';render()};
   document.getElementById('lock').onclick=async()=>{
-    if(admin){await sb.auth.signOut();admin=false;render()}else{view='login';render()}};
+    if(admin){await sb.auth.signOut();admin=false;adminStage=null;render()}else{view='login';render()}};
   if(admin){
     document.getElementById('annb').onclick=async()=>{
       const t=prompt('اكتب الإعلان (سيبه فاضي لو عايز تمسحه):',ann);if(t===null)return;
-      const {error}=await sb.from('announcements').insert({body:t.trim()});error?fail(error):reload()};
+      let st=stage;
+      if(!adminStage&&confirm('تنشر الإعلان لكل المراحل؟\nموافق = كل المراحل · إلغاء = '+STAGES[stage-1]+' بس'))st=null;
+      const {error}=await sb.from('announcements').insert({body:t.trim(),stage:st});error?fail(error):reload()};
     document.getElementById('stb').onclick=()=>{view='stats';render()};
     document.getElementById('inb').onclick=()=>{view='inbox';render()};
   }
@@ -526,7 +545,7 @@ function gpaView(){
 /* ---------- اختيار المرحلة والترم ---------- */
 function pick(){
   app.innerHTML=`<div class="pick"><div class="bar"><h1>📚 محاضراتي</h1>${thmBtn()}</div><p class="mut">اختار مرحلتك الدراسية والترم عشان تشوف محاضراتك.</p>
-  <h2>المرحلة</h2><div class="grid">${STAGES.map((n,i)=>`<button class="opt${tmpS===i+1?' on':''}" data-s="${i+1}">${n}</button>`).join('')}</div>
+  <h2>المرحلة</h2><div class="grid">${STAGES.map((n,i)=>(adminStage&&adminStage!==i+1)?'':`<button class="opt${tmpS===i+1?' on':''}" data-s="${i+1}">${n}</button>`).join('')}</div>
   <h2>الترم</h2><div class="tabs"><button class="opt${tmpT===1?' on':''}" data-t="1">${TERMS[1]}</button><button class="opt${tmpT===2?' on':''}" data-t="2">${TERMS[2]}</button></div>
   <button class="go" id="go"${tmpS&&tmpT?'':' disabled'}>دخول</button>
   <div class="foot"><button class="g" id="lock">${admin?'تسجيل الخروج':'🔒 دخول صاحب التطبيق'}</button></div></div>`;
@@ -535,7 +554,7 @@ function pick(){
   app.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{tmpT=+b.dataset.t;pick()});
   document.getElementById('go').onclick=()=>{if(!tmpS||!tmpT)return;stage=tmpS;term=tmpT;saveSel();view='home';q='';render();logVisit()};
   document.getElementById('lock').onclick=async()=>{
-    if(admin){await sb.auth.signOut();admin=false;pick()}else{view='login';render()}};
+    if(admin){await sb.auth.signOut();admin=false;adminStage=null;pick()}else{view='login';render()}};
 }
 
 function login(){
@@ -545,7 +564,9 @@ function login(){
   document.getElementById('go').onclick=async()=>{
     const {error}=await sb.auth.signInWithPassword({email:document.getElementById('em').value.trim(),password:document.getElementById('pw').value});
     if(error)return alert('الإيميل أو كلمة السر غلط.');
-    admin=true;view='home';reload()};
+    const ok=await loadAdmin();
+    if(ok!==true){view='home';render();return alert(ok==='noadmin'?'الحساب ده مش مسجّل كأدمن لأي مرحلة. كلّم صاحب التطبيق.':'تعذّر التحقق من صلاحيات الحساب. جرّب تاني.')}
+    view='home';reload()};
 }
 
 /* ---------- صفحة المادة ---------- */
@@ -589,7 +610,8 @@ function subject(){
 async function stats(){
   app.innerHTML=`<div class="bar"><button class="g" id="back">→</button><h1>📊 الإحصائيات</h1></div><div id="sbox"><p class="empty">جاري التحميل…</p></div>`;
   document.getElementById('back').onclick=()=>{view='home';render()};
-  const {data,error}=await sb.rpc('visit_stats');
+  let {data,error}=await sb.rpc('visit_stats_v2',{p_stage:adminStage});
+  if(error&&!adminStage){const o=await sb.rpc('visit_stats');data=o.data;error=o.error}
   const box=document.getElementById('sbox');if(!box)return;
   if(error||!data){box.innerHTML='<p class="empty">تعذّر تحميل الإحصائيات. اتأكد إنك شغّلت كود الـ SQL الخاص بالزيارات في Supabase.</p>';return}
   const by=(data.by||[]).map(r=>`<div class="f"><span class="n">${esc(STAGES[r.stage-1]||'—')} · ${esc(TERMS[r.term]||'—')}</span><b>${esc(r.n)}</b></div>`).join('');
@@ -915,7 +937,7 @@ function noteModal(id){
 /* --- بلاغ لينك مش شغال --- */
 async function loadReports(){
   if(!admin){reports=[];return}
-  try{const r=await sb.from('reports').select('*').order('created_at',{ascending:false}).limit(300);reports=r.error?[]:(r.data||[])}catch(e){reports=[]}
+  try{let qy=sb.from('reports').select('*').order('created_at',{ascending:false}).limit(300);if(adminStage)qy=qy.eq('stage',adminStage);const r=await qy;reports=r.error?[]:(r.data||[])}catch(e){reports=[]}
 }
 function reportModal(id){
   const it=items.find(i=>String(i.id)===String(id));if(!it)return;
@@ -925,7 +947,7 @@ function reportModal(id){
     document.getElementById('rx').onclick=closeChoice;
     document.getElementById('rs').onclick=async ev=>{
       ev.target.disabled=true;
-      const {error}=await sb.from('reports').insert({kind:'broken',item_id:String(it.id),subject_id:String(it.subject_id),title:String(it.title).slice(0,200),note:document.getElementById('rn').value.trim().slice(0,300),device:devId()});
+      const {error}=await sb.from('reports').insert({kind:'broken',stage:((subs.find(s=>String(s.id)===String(it.subject_id))||{}).stage||stage||null),item_id:String(it.id),subject_id:String(it.subject_id),title:String(it.title).slice(0,200),note:document.getElementById('rn').value.trim().slice(0,300),device:devId()});
       if(error){ev.target.disabled=false;return alert('تعذّر الإرسال. اتأكد من النت وجرّب تاني.')}
       ls.set(k,dayKey());closeChoice();alert('وصل البلاغ، شكرًا ليك 🙏')}});
 }
@@ -938,7 +960,7 @@ function sugView(){
     const t=document.getElementById('sg').value.trim();if(!t)return alert('اكتب اقتراحك الأول.');
     if(Date.now()-(+ls.get('sgt')||0)<30000)return alert('استنى شوية قبل ما تبعت اقتراح تاني.');
     ev.target.disabled=true;
-    const {error}=await sb.from('reports').insert({kind:'suggestion',note:t.slice(0,500),device:devId()});
+    const {error}=await sb.from('reports').insert({kind:'suggestion',stage:stage||null,note:t.slice(0,500),device:devId()});
     ev.target.disabled=false;
     if(error)return alert('تعذّر الإرسال. اتأكد من النت وجرّب تاني.');
     ls.set('sgt',String(Date.now()));alert('وصل اقتراحك، شكرًا ليك 🙏');view='home';render()};
@@ -1021,7 +1043,7 @@ function pomoView(){
   try{
     loadSel();loadGpa();loadPlan();plDone=loadSet('plandone');done=loadSet('done');fav=loadSet('fav');seen=ls.get('seen')==='2';
     sb=supabase.createClient(SB_URL,SB_KEY);
-    try{const {data}=await sb.auth.getSession();admin=!!(data&&data.session)}catch(e){admin=false}
+    await loadAdmin();
     if(await load()){await loadReports();render();logVisit()}
   }catch(e){app.innerHTML='<p class="empty">حصلت مشكلة في التحميل. جرّب تحدّث الصفحة.</p>'}
 })();
