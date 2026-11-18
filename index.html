@@ -103,6 +103,21 @@ input{font:inherit;width:100%;padding:10px;margin:6px 0;border:1px solid var(--b
 .plf{padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--bd);display:flex;gap:8px}
 .plf button{flex:1}
 .plb{position:relative}
+.mp{position:fixed;inset:0;z-index:58;background:var(--bg);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0)}
+.mp[hidden]{display:none}
+.mph{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--bd)}
+.mpb{flex:1;display:flex;flex-direction:column;justify-content:center;background:#000;overflow:hidden}
+.mpb iframe,.mpb video{width:100%;aspect-ratio:16/9;border:0;display:block;background:#000}
+.mpb audio{width:calc(100% - 32px);margin:24px 16px}
+.mpf{padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--bd);display:flex;gap:8px;background:var(--bg)}
+.mpf button{flex:1}
+.mpmini{display:none}
+.mp.mini{inset:auto;right:8px;bottom:calc(84px + env(safe-area-inset-bottom,0px));width:min(48vw,210px);display:block;padding-top:0;background:#000;border-radius:10px;overflow:hidden;box-shadow:0 4px 18px rgba(0,0,0,.45)}
+.mp.mini .mph,.mp.mini .mpf{display:none}
+.mp.mini .mpb{display:block}
+.mp.mini .mpb audio{width:100%;margin:0;height:40px}
+.mp.mini .mpmini{display:flex;position:absolute;top:0;left:0;right:0;z-index:2;justify-content:space-between;align-items:center;background:rgba(0,0,0,.6);padding:1px 4px;touch-action:none;cursor:grab}
+.mpmini button{background:transparent;color:#fff;padding:3px 8px;font-size:15px;line-height:1}
 .anc{position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none}
 .anc.on{pointer-events:auto;touch-action:none;cursor:crosshair}
 .ant{display:flex;gap:6px;align-items:center;overflow-x:auto;padding:8px 10px;border-top:1px solid var(--bd);background:var(--card)}
@@ -163,6 +178,7 @@ textarea{resize:vertical;line-height:1.7}
 <div id="offb" class="off" hidden>📴 مفيش إنترنت — بتشوف آخر نسخة محفوظة على جهازك.</div>
 <div id="ch" class="ch" hidden></div>
 <div id="pl" class="pl" hidden></div>
+<div id="mp" class="mp" hidden></div>
 <main id="app"><p class="empty">جاري التحميل…</p></main>
 <footer class="credit">صُنع بحب بواسطة <b>خالد</b> ✨</footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script>
@@ -332,6 +348,7 @@ function closePlayer(){
 function openPlayer(it){
   const e=embedInfo(it.url),pl=document.getElementById('pl');
   markStudy();if(!e||!pl){window.open(safeUrl(it.url),'_blank','noopener');return}
+  if(isRecItem(it,e)&&openMedia(it,e))return;
   const id=String(it.id),ratio=e.t==='yt'||e.t==='video'||(e.t==='drive'&&it.kind==='rec');
   const canAnn=e.t==='drive'||e.t==='doc'||e.t==='folder';
   let body;
@@ -349,6 +366,70 @@ function openPlayer(it){
     ev.target.textContent=done.has(id)?'✅ تم المذاكرة':'⬜ علّم إنك خلصت';refresh()};
   document.getElementById('pln').onclick=()=>noteModal(id);
   if(canAnn)initAnn(id);
+}
+/* ---------- مشغّل التسجيل: بيفضل شغال في الخلفية وانت بتفتح الملفات ---------- */
+let mpItem=null,mpFull=false,mpSkip=false,mpPos=null;
+function isRecItem(it,e){return !!e&&(e.t==='yt'||e.t==='video'||e.t==='audio'||(e.t==='drive'&&it.kind==='rec'))}
+function mpEl(){return document.getElementById('mp')}
+function mpApply(){
+  const m=mpEl();if(!m)return;
+  if(mpPos&&m.classList.contains('mini')){m.style.left=mpPos.x+'px';m.style.top=mpPos.y+'px';m.style.right='auto';m.style.bottom='auto'}
+  else{m.style.left=m.style.top=m.style.right=m.style.bottom=''}
+}
+function mpMini(){
+  const m=mpEl();if(!m||m.hidden)return;
+  mpFull=false;m.classList.add('mini');mpApply();
+  if(!playerOpen)document.body.style.overflow='';
+}
+function mpExpand(){
+  const m=mpEl();if(!m||m.hidden)return;
+  m.classList.remove('mini');mpApply();mpFull=true;document.body.style.overflow='hidden';
+  try{history.pushState({mp:1},'')}catch(err){}
+}
+function mpBack(){try{if(history.state&&history.state.mp){history.back();return}}catch(err){}mpMini()}
+function mpClose(){
+  const m=mpEl();if(!m)return;
+  const was=mpFull;
+  m.hidden=true;m.innerHTML='';m.classList.remove('mini');m.removeAttribute('style');
+  mpItem=null;mpFull=false;
+  if(!playerOpen)document.body.style.overflow='';
+  if(was){try{if(history.state&&history.state.mp){mpSkip=true;history.back()}}catch(err){}}
+}
+function mpDrag(){
+  const g=document.getElementById('mpg'),m=mpEl();if(!g||!m)return;let d=null;
+  g.addEventListener('pointerdown',ev=>{if(ev.target.closest('button'))return;const r=m.getBoundingClientRect();d={x:ev.clientX-r.left,y:ev.clientY-r.top};try{g.setPointerCapture(ev.pointerId)}catch(err){}});
+  g.addEventListener('pointermove',ev=>{
+    if(!d)return;
+    const x=Math.min(Math.max(0,ev.clientX-d.x),innerWidth-m.offsetWidth),y=Math.min(Math.max(0,ev.clientY-d.y),innerHeight-m.offsetHeight);
+    mpPos={x,y};mpApply();
+  });
+  g.addEventListener('pointerup',()=>{d=null});g.addEventListener('pointercancel',()=>{d=null});
+}
+function openMedia(it,e){
+  const m=mpEl();if(!m)return false;
+  const id=String(it.id);
+  if(mpItem&&mpItem.id===id&&mpItem.url===it.url&&!m.hidden){if(!mpFull)mpExpand();return true}
+  let body;
+  if(e.t==='audio')body=`<audio controls autoplay src="${esc(e.src)}"></audio>`;
+  else if(e.t==='video')body=`<video controls autoplay playsinline src="${esc(e.src)}"></video>`;
+  else body=`<iframe src="${esc(e.src)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+  m.innerHTML=`<div class="mph"><button class="g" id="mpm">⬇ تصغير</button><b class="plt">${esc(it.title)}</b><a class="g btn" href="${esc(safeUrl(it.url))}" target="_blank" rel="noopener" title="فتح في تاب جديد">↗</a><button class="g" id="mpc" aria-label="إيقاف وإغلاق">✕</button></div>
+  <div class="mpb">${body}</div>
+  <div class="mpf"><button id="mpd">${done.has(id)?'✅ تم المذاكرة':'⬜ علّم إنك خلصت'}</button><button class="g" id="mpn">📝 ملاحظاتي</button></div>
+  <div class="mpmini" id="mpg"><button id="mpe" aria-label="تكبير">⤢</button><button id="mpx" aria-label="إيقاف وإغلاق">✕</button></div>`;
+  mpItem={id,url:it.url};m.hidden=false;m.classList.remove('mini');m.removeAttribute('style');
+  const wasFull=mpFull;mpFull=true;document.body.style.overflow='hidden';
+  if(!wasFull){try{history.pushState({mp:1},'')}catch(err){}}
+  document.getElementById('mpm').onclick=mpBack;
+  document.getElementById('mpc').onclick=mpClose;
+  document.getElementById('mpx').onclick=mpClose;
+  document.getElementById('mpe').onclick=mpExpand;
+  document.getElementById('mpn').onclick=()=>noteModal(id);
+  document.getElementById('mpd').onclick=ev=>{
+    done.has(id)?done.delete(id):done.add(id);saveSet('done',done);if(done.has(id))markStudy();
+    ev.target.textContent=done.has(id)?'✅ تم المذاكرة':'⬜ علّم إنك خلصت';refresh()};
+  mpDrag();
+  return true;
 }
 /* ---------- تعليم على الملف: قلم / هايلايت / كتابة / ممحاة (بيتحفظ على جهازك بس) ---------- */
 function annAll(){try{return JSON.parse(ls.get('ann')||'{}')||{}}catch(e){return {}}}
@@ -457,8 +538,8 @@ function initAnn(id){
   };
   fit();draw();
 }
-window.addEventListener('popstate',()=>{if(playerOpen)closePlayer()});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){const c=document.getElementById('ch');if(c&&!c.hidden){closeChoice();return}}if(e.key==='Escape'&&playerOpen){try{if(history.state&&history.state.pl){history.back();return}}catch(err){}closePlayer()}});
+window.addEventListener('popstate',()=>{if(mpSkip){mpSkip=false;return}if(mpFull){mpMini();return}if(playerOpen)closePlayer()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){const c=document.getElementById('ch');if(c&&!c.hidden){closeChoice();return}}if(e.key==='Escape'&&mpFull){mpBack();return}if(e.key==='Escape'&&playerOpen){try{if(history.state&&history.state.pl){history.back();return}}catch(err){}closePlayer()}});
 
 /* ---------- صف ملف (بيتستخدم في المادة وفي نتايج البحث والمفضلة) ---------- */
 function fileRow(i,showSub){
