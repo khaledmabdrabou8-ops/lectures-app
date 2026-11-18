@@ -102,6 +102,18 @@ input{font:inherit;width:100%;padding:10px;margin:6px 0;border:1px solid var(--b
 .plb audio{width:calc(100% - 32px);margin:24px 16px}
 .plf{padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--bd);display:flex;gap:8px}
 .plf button{flex:1}
+.plb{position:relative}
+.anc{position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none}
+.anc.on{pointer-events:auto;touch-action:none;cursor:crosshair}
+.ant{display:flex;gap:6px;align-items:center;overflow-x:auto;padding:8px 10px;border-top:1px solid var(--bd);background:var(--card)}
+.ant[hidden]{display:none}
+.ant button{flex:none;padding:8px 10px;font-size:16px;line-height:1;background:var(--card);color:var(--tx);border:1px solid var(--bd)}
+.ant button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+.ant .sw{width:26px;height:26px;border-radius:50%;padding:0;border:2px solid var(--bd)}
+.ant .sw.on{outline:2px solid var(--ac);outline-offset:2px}
+.ant .sep{flex:none;width:1px;height:24px;background:var(--bd)}
+.ant .pg{flex:none;font-size:13px;color:var(--mut);min-width:56px;text-align:center}
+.ati{position:absolute;z-index:5;width:auto;margin:0;padding:4px 8px;font-size:16px;border:2px solid var(--ac);border-radius:8px;background:#fff;color:#1d1d1b;box-shadow:0 2px 8px rgba(0,0,0,.25)}
 textarea,select{font:inherit;width:100%;padding:10px;margin:6px 0;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx)}
 textarea{resize:vertical;line-height:1.7}
 .lbl{display:block;font-size:13px;color:var(--mut);margin:10px 0 2px}
@@ -177,7 +189,7 @@ const GUIDE=[
  {i:'🌙',t:'داكن وبدون إنترنت',p:'غيّر المظهر من زرار 🌙. وبعد ما تفتح التطبيق مرة بنت، الجدول والمواد والملخصات بتفضل شغالة حتى لو النت قطع (الفيديوهات بس محتاجة نت).'},
  {i:'📲',t:'ضيفه على شاشتك',p:'أندرويد: من قايمة المتصفح ⋮ اختار «تثبيت التطبيق». آيفون: من Safari اضغط مشاركة ثم «إضافة إلى الشاشة الرئيسية».'}
 ];
-let offline=false,sb,subs=[],items=[],aids=[],ann='',anns=[],adminStage=null,cur=null,tab='slides',admin=false,view='home',stage=null,term=null,tmpS=null,tmpT=null,q='',qs='',gi=0;
+let offline=false,sb,subs=[],items=[],aids=[],ann='',cur=null,tab='slides',admin=false,view='home',stage=null,term=null,tmpS=null,tmpT=null,q='',qs='',gi=0;
 let done=new Set(),fav=new Set(),seen=false,gp={rows:[],ph:'',pg:''};
 let curItem=null,aidFrom='home',aidTab='sum',qz=null,cd={i:0,f:false},pl={exams:[],perDay:3,off:[5]},plDone=new Set();
 
@@ -226,41 +238,25 @@ function logVisit(){
 }
 
 function setOffline(v){offline=v;const b=document.getElementById('offb');if(b)b.hidden=!v}
-/* إعلان المرحلة الحالية، ولو مفيش بيطلع الإعلان العام */
-function annFor(){const a=anns.find(x=>x.stage===stage)||anns.find(x=>x.stage==null);return(a&&a.body)||''}
-/* صلاحيات الأدمن: adminStage = رقم المرحلة، أو null لو أدمن عام */
-async function loadAdmin(){
-  admin=false;adminStage=null;
-  try{
-    const {data:{session}}=await sb.auth.getSession();
-    if(!session)return false;
-    const r=await sb.from('admins').select('stage').eq('user_id',session.user.id).maybeSingle();
-    if(r.error)return false;
-    if(!r.data){await sb.auth.signOut();return 'noadmin'}
-    admin=true;adminStage=r.data.stage==null?null:+r.data.stage;
-    if(adminStage){tmpS=adminStage;if(stage!==adminStage){stage=adminStage;if(term)saveSel()}}
-    return true;
-  }catch(e){admin=false;adminStage=null;return false}
-}
 async function load(){
   let a,b,c,d;
   try{
     [a,b,c,d]=await Promise.all([
       sb.from('subjects').select('*').order('created_at'),
       sb.from('items').select('*').order('created_at'),
-      sb.from('announcements').select('body,stage').order('created_at',{ascending:false}).limit(50),
+      sb.from('announcements').select('body').order('created_at',{ascending:false}).limit(1),
       sb.from('aids').select('*')]);
   }catch(e){a=b=c=d={error:e}}
   if(a.error||b.error){
     try{
       const sn=JSON.parse(ls.get('snap')||'null');
-      if(sn&&Array.isArray(sn.subs)&&Array.isArray(sn.items)){subs=sn.subs;items=sn.items;anns=Array.isArray(sn.anns)?sn.anns:(sn.ann?[{body:sn.ann,stage:null}]:[]);aids=Array.isArray(sn.aids)?sn.aids:[];setOffline(true);return true}
+      if(sn&&Array.isArray(sn.subs)&&Array.isArray(sn.items)){subs=sn.subs;items=sn.items;ann=sn.ann||'';aids=Array.isArray(sn.aids)?sn.aids:[];setOffline(true);return true}
     }catch(e){}
     app.innerHTML='<p class="empty">تعذّر تحميل البيانات. اتأكد من الاتصال بالإنترنت وجرّب تاني.</p>';return false}
   subs=a.data;items=b.data;
-  anns=(!c.error&&Array.isArray(c.data))?c.data:[];
+  ann=(!c.error&&c.data&&c.data[0]&&c.data[0].body)||'';
   aids=(!d.error&&Array.isArray(d.data))?d.data:[];
-  ls.set('snap',JSON.stringify({subs,items,anns,aids}));
+  ls.set('snap',JSON.stringify({subs,items,ann,aids}));
   setOffline(false);return true;
 }
 async function reload(){if(await load()){await loadReports();render()}}
@@ -337,13 +333,14 @@ function openPlayer(it){
   const e=embedInfo(it.url),pl=document.getElementById('pl');
   markStudy();if(!e||!pl){window.open(safeUrl(it.url),'_blank','noopener');return}
   const id=String(it.id),ratio=e.t==='yt'||e.t==='video'||(e.t==='drive'&&it.kind==='rec');
+  const canAnn=e.t==='drive'||e.t==='doc'||e.t==='folder';
   let body;
   if(e.t==='audio')body=`<audio controls autoplay src="${esc(e.src)}"></audio>`;
   else if(e.t==='video')body=`<video class="r16" controls autoplay playsinline src="${esc(e.src)}"></video>`;
   else body=`<iframe class="${ratio?'r16':'full'}" src="${esc(e.src)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
   pl.innerHTML=`<div class="plh"><button class="g" id="plc" aria-label="إغلاق">✕</button><b class="plt">${esc(it.title)}</b><a class="g btn" id="plx" href="${esc(safeUrl(it.url))}" target="_blank" rel="noopener" title="فتح في تاب جديد">↗</a></div>
-  <div class="plb">${body}</div>
-  <div class="plf"><button id="pld">${done.has(id)?'✅ تم المذاكرة':'⬜ علّم إنك خلصت'}</button><button class="g" id="pln">📝 ملاحظاتي</button></div>`;
+  <div class="plb">${body}${canAnn?'<canvas id="anc" class="anc"></canvas>':''}</div>${canAnn?'<div class="ant" id="ant" hidden></div>':''}
+  <div class="plf"><button id="pld">${done.has(id)?'✅ تم المذاكرة':'⬜ علّم إنك خلصت'}</button><button class="g" id="pln">📝 ملاحظاتي</button>${canAnn?`<button class="g" id="pla">${annHas(id)?'✏️ تعليمي •':'✏️ تعليم'}</button>`:''}</div>`;
   pl.hidden=false;playerOpen=true;document.body.style.overflow='hidden';
   try{history.pushState({pl:1},'')}catch(err){}
   document.getElementById('plc').onclick=()=>{try{if(history.state&&history.state.pl){history.back();return}}catch(err){}closePlayer()};
@@ -351,6 +348,114 @@ function openPlayer(it){
     done.has(id)?done.delete(id):done.add(id);saveSet('done',done);if(done.has(id))markStudy();
     ev.target.textContent=done.has(id)?'✅ تم المذاكرة':'⬜ علّم إنك خلصت';refresh()};
   document.getElementById('pln').onclick=()=>noteModal(id);
+  if(canAnn)initAnn(id);
+}
+/* ---------- تعليم على الملف: قلم / هايلايت / كتابة / ممحاة (بيتحفظ على جهازك بس) ---------- */
+function annAll(){try{return JSON.parse(ls.get('ann')||'{}')||{}}catch(e){return {}}}
+function annHas(id){const a=annAll()[id];return !!a&&Object.values(a).some(p=>p&&p.length)}
+function initAnn(id){
+  const cv=document.getElementById('anc'),bar=document.getElementById('ant'),btn=document.getElementById('pla');
+  if(!cv||!bar||!btn)return;
+  const host=cv.parentNode,cx=cv.getContext('2d');
+  const COLS=['#ffe14d','#ff8fb1','#7be0a6','#6cc3ff','#e5484d','#1d1d1b'];
+  const pc={pen:'#e5484d',hl:'#ffe14d',text:'#1d6fe0'};
+  let tool='hand',page=1,hide=false,cur=null,W=1,H=1,dpr=1,busy=false;
+  let data=annAll()[id]||{};
+  const list=()=>data[page]||(data[page]=[]);
+  function save(){
+    const a=annAll(),c={};
+    for(const k in data)if(data[k]&&data[k].length)c[k]=data[k];
+    Object.keys(c).length?a[id]=c:delete a[id];
+    ls.set('ann',JSON.stringify(a));
+    btn.textContent=annHas(id)?'✏️ تعليمي •':'✏️ تعليم';
+  }
+  function paint(s){
+    cx.save();
+    if(s.t==='t'){
+      cx.fillStyle=s.c;cx.font='600 '+(s.z*W)+'px system-ui,Tahoma,sans-serif';
+      cx.textBaseline='top';cx.textAlign='left';cx.direction='ltr';
+      cx.fillText(s.s,s.x*W,s.y*W);
+    }else{
+      cx.lineCap='round';cx.lineJoin='round';cx.strokeStyle=s.c;cx.lineWidth=s.w*W;cx.globalAlpha=s.a;
+      cx.beginPath();
+      s.p.forEach((q,i)=>i?cx.lineTo(q[0]*W,q[1]*W):cx.moveTo(q[0]*W,q[1]*W));
+      if(s.p.length===1)cx.lineTo(s.p[0][0]*W+.01,s.p[0][1]*W);
+      cx.stroke();
+    }
+    cx.restore();
+  }
+  function draw(){
+    cx.setTransform(dpr,0,0,dpr,0,0);cx.clearRect(0,0,W,H);
+    if(hide)return;
+    list().forEach(paint);if(cur)paint(cur);
+  }
+  function fit(){
+    const r=host.getBoundingClientRect();W=Math.max(1,r.width);H=Math.max(1,r.height);dpr=window.devicePixelRatio||1;
+    cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);draw();
+  }
+  if(window.ResizeObserver)new ResizeObserver(fit).observe(host);else window.addEventListener('resize',fit);
+  const pos=e=>{const r=cv.getBoundingClientRect();return [(e.clientX-r.left)/W,(e.clientY-r.top)/W]};
+  function hit(s,x,y){
+    if(s.t==='t'){const w=s.z*s.s.length*.6;return x>=s.x-.02&&x<=s.x+w+.02&&y>=s.y-.02&&y<=s.y+s.z*1.3+.02}
+    const R=.03+s.w/2;return s.p.some(q=>Math.hypot(q[0]-x,q[1]-y)<R);
+  }
+  function erase(x,y){const l=list(),n=l.length;data[page]=l.filter(s=>!hit(s,x,y));if(data[page].length!==n){draw();return true}return false}
+  function addText(x,y){
+    if(busy)return;busy=true;
+    const inp=document.createElement('input');inp.className='ati';inp.dir='auto';inp.placeholder='اكتب هنا…';inp.maxLength=120;
+    inp.style.left=Math.min(Math.max(4,x*W),Math.max(4,W-200))+'px';inp.style.top=Math.max(4,y*W)+'px';inp.style.maxWidth=(W-16)+'px';
+    host.appendChild(inp);setTimeout(()=>inp.focus(),30);
+    let done=false;
+    const fin=ok=>{
+      if(done)return;done=true;busy=false;
+      const v=inp.value.trim();inp.remove();
+      if(ok&&v){list().push({t:'t',x,y,s:v,c:pc.text,z:.045});save();draw()}
+    };
+    inp.onkeydown=ev=>{if(ev.key==='Enter'){ev.preventDefault();fin(true)}else if(ev.key==='Escape')fin(false)};
+    inp.onblur=()=>fin(true);
+  }
+  cv.addEventListener('pointerdown',e=>{
+    if(tool==='hand'||busy)return;e.preventDefault();
+    const [x,y]=pos(e);
+    if(tool==='text'){addText(x,y);return}
+    try{cv.setPointerCapture(e.pointerId)}catch(err){}
+    if(tool==='erase'){cur={erase:1};if(erase(x,y))save();return}
+    cur=tool==='hl'?{t:'s',c:pc.hl,w:.05,a:.38,p:[[x,y]]}:{t:'s',c:pc.pen,w:.005,a:1,p:[[x,y]]};
+    draw();
+  });
+  cv.addEventListener('pointermove',e=>{
+    if(!cur)return;e.preventDefault();const [x,y]=pos(e);
+    if(cur.erase){if(erase(x,y))save();return}
+    const l=cur.p[cur.p.length-1];if(Math.hypot(l[0]-x,l[1]-y)<.002)return;
+    cur.p.push([x,y]);draw();
+  });
+  const up=()=>{
+    if(!cur)return;
+    if(!cur.erase){list().push(cur);save()}
+    cur=null;draw();
+  };
+  cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);
+  function ui(){
+    const T=[['hand','✋','تحريك الملف'],['pen','✏️','قلم'],['hl','🖍️','هايلايت'],['text','🔤','كتابة'],['erase','🧽','ممحاة']];
+    bar.innerHTML=T.map(t=>`<button class="${tool===t[0]?'on':''}" data-t="${t[0]}" title="${t[2]}" aria-label="${t[2]}">${t[1]}</button>`).join('')
+      +'<i class="sep"></i>'
+      +(tool==='pen'||tool==='hl'||tool==='text'?COLS.map(c=>`<button class="sw${pc[tool]===c?' on':''}" data-c="${c}" style="background:${c}" aria-label="لون"></button>`).join('')+'<i class="sep"></i>':'')
+      +`<button data-u title="تراجع" aria-label="تراجع">↩️</button><button data-z title="مسح الصفحة" aria-label="مسح الصفحة">🗑️</button><button data-h class="${hide?'on':''}" title="إخفاء التعليم" aria-label="إخفاء التعليم">${hide?'🙈':'👁'}</button><i class="sep"></i>`
+      +`<button data-p="-1" aria-label="الصفحة السابقة">−</button><span class="pg">صفحة ${page}</span><button data-p="1" aria-label="الصفحة التالية">+</button>`;
+    cv.classList.toggle('on',!bar.hidden&&tool!=='hand'&&!hide);
+    bar.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{tool=b.dataset.t;if(hide&&tool!=='hand'){hide=false;draw()}ui()});
+    bar.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{pc[tool]=b.dataset.c;ui()});
+    bar.querySelector('[data-u]').onclick=()=>{list().pop();save();draw()};
+    bar.querySelector('[data-z]').onclick=()=>{if(list().length&&confirm('مسح كل التعليم على الصفحة دي؟')){data[page]=[];save();draw()}};
+    bar.querySelector('[data-h]').onclick=()=>{hide=!hide;draw();ui()};
+    bar.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{page=Math.max(1,page+(+b.dataset.p));draw();ui()});
+  }
+  btn.onclick=()=>{
+    bar.hidden=!bar.hidden;
+    if(bar.hidden){tool='hand'}else{hide=false}
+    ui();draw();setTimeout(fit,0);
+  };
+  fit();draw();
 }
 window.addEventListener('popstate',()=>{if(playerOpen)closePlayer()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){const c=document.getElementById('ch');if(c&&!c.hidden){closeChoice();return}}if(e.key==='Escape'&&playerOpen){try{if(history.state&&history.state.pl){history.back();return}}catch(err){}closePlayer()}});
@@ -425,21 +530,20 @@ function fillRes(){
   bindFiles();
 }
 function home(){
-  ann=annFor();
   const fc=items.filter(i=>fav.has(String(i.id))).length;
   const vsid=new Set(vis().map(s=>String(s.id))),hc=items.filter(i=>vsid.has(String(i.subject_id))&&aidOf(i.id)).length,tp=todayPending();
   app.innerHTML=`<div class="bar"><h1>📚 محاضراتي</h1><button class="g ic stk${studiedToday()?'':' cold'}" id="stk" aria-label="سلسلة المذاكرة" title="أيام مذاكرة متتالية">🔥 ${streakNow()}</button><button class="g ic" id="qgd" aria-label="دليل الاستخدام">❓</button>${thmBtn()}</div>
   <button class="g chg" id="chg">${STAGES[stage-1]} · ${TERMS[term]} ⇄</button>
   ${ann?`<div class="ann">📢 ${esc(ann)}</div>`:''}
   <div class="qa"><button class="g" id="qfav">⭐ المفضلة${fc?' ('+fc+')':''}</button><button class="g" id="qhub">🧠 المذاكرة${hc?' ('+hc+')':''}</button><button class="g" id="qplan">📅 جدول المذاكرة${tp?' ('+tp+')':''}</button><button class="g" id="qgpa">🎓 المعدل</button><button class="g" id="qpm">⏱️ بومودورو</button><button class="g" id="qsg">💡 اقتراح</button></div>
-  ${admin?`<p class="mut" style="margin:0 0 8px">👤 أدمن ${adminStage?esc(STAGES[adminStage-1]):'عام (كل المراحل)'}</p><div class="adm"><button class="g" id="annb">📢 ${ann?'تعديل الإعلان':'إضافة إعلان'}</button><button class="g" id="stb">📊 الإحصائيات</button><button class="g" id="inb">📥 البلاغات${reports.length?' ('+reports.length+')':''}</button></div>`:''}
+  ${admin?`<div class="adm"><button class="g" id="annb">📢 ${ann?'تعديل الإعلان':'إضافة إعلان'}</button><button class="g" id="stb">📊 الإحصائيات</button><button class="g" id="inb">📥 البلاغات${reports.length?' ('+reports.length+')':''}</button></div>`:''}
   <input id="q" type="search" dir="auto" placeholder="🔎 ابحث عن مادة أو محاضرة…" value="${esc(q)}" autocomplete="off">
   <div id="res"></div>
   <div class="foot"><button class="g" id="lock">${admin?'تسجيل الخروج':'🔒 دخول صاحب التطبيق'}</button></div>`;
   bindTheme();
   document.getElementById('q').oninput=e=>{q=e.target.value;fillRes()};
   fillRes();
-  document.getElementById('chg').onclick=()=>{clearSel();if(adminStage)tmpS=adminStage;render()};
+  document.getElementById('chg').onclick=()=>{clearSel();render()};
   document.getElementById('qfav').onclick=()=>{view='fav';render()};
   document.getElementById('qgpa').onclick=()=>{view='gpa';render()};
   document.getElementById('qhub').onclick=()=>{view='hub';render()};
@@ -449,13 +553,11 @@ function home(){
   document.getElementById('qpm').onclick=()=>{view='pomo';render()};
   document.getElementById('qsg').onclick=()=>{view='sug';render()};
   document.getElementById('lock').onclick=async()=>{
-    if(admin){await sb.auth.signOut();admin=false;adminStage=null;render()}else{view='login';render()}};
+    if(admin){await sb.auth.signOut();admin=false;render()}else{view='login';render()}};
   if(admin){
     document.getElementById('annb').onclick=async()=>{
       const t=prompt('اكتب الإعلان (سيبه فاضي لو عايز تمسحه):',ann);if(t===null)return;
-      let st=stage;
-      if(!adminStage&&confirm('تنشر الإعلان لكل المراحل؟\nموافق = كل المراحل · إلغاء = '+STAGES[stage-1]+' بس'))st=null;
-      const {error}=await sb.from('announcements').insert({body:t.trim(),stage:st});error?fail(error):reload()};
+      const {error}=await sb.from('announcements').insert({body:t.trim()});error?fail(error):reload()};
     document.getElementById('stb').onclick=()=>{view='stats';render()};
     document.getElementById('inb').onclick=()=>{view='inbox';render()};
   }
@@ -545,7 +647,7 @@ function gpaView(){
 /* ---------- اختيار المرحلة والترم ---------- */
 function pick(){
   app.innerHTML=`<div class="pick"><div class="bar"><h1>📚 محاضراتي</h1>${thmBtn()}</div><p class="mut">اختار مرحلتك الدراسية والترم عشان تشوف محاضراتك.</p>
-  <h2>المرحلة</h2><div class="grid">${STAGES.map((n,i)=>(adminStage&&adminStage!==i+1)?'':`<button class="opt${tmpS===i+1?' on':''}" data-s="${i+1}">${n}</button>`).join('')}</div>
+  <h2>المرحلة</h2><div class="grid">${STAGES.map((n,i)=>`<button class="opt${tmpS===i+1?' on':''}" data-s="${i+1}">${n}</button>`).join('')}</div>
   <h2>الترم</h2><div class="tabs"><button class="opt${tmpT===1?' on':''}" data-t="1">${TERMS[1]}</button><button class="opt${tmpT===2?' on':''}" data-t="2">${TERMS[2]}</button></div>
   <button class="go" id="go"${tmpS&&tmpT?'':' disabled'}>دخول</button>
   <div class="foot"><button class="g" id="lock">${admin?'تسجيل الخروج':'🔒 دخول صاحب التطبيق'}</button></div></div>`;
@@ -554,7 +656,7 @@ function pick(){
   app.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{tmpT=+b.dataset.t;pick()});
   document.getElementById('go').onclick=()=>{if(!tmpS||!tmpT)return;stage=tmpS;term=tmpT;saveSel();view='home';q='';render();logVisit()};
   document.getElementById('lock').onclick=async()=>{
-    if(admin){await sb.auth.signOut();admin=false;adminStage=null;pick()}else{view='login';render()}};
+    if(admin){await sb.auth.signOut();admin=false;pick()}else{view='login';render()}};
 }
 
 function login(){
@@ -564,9 +666,7 @@ function login(){
   document.getElementById('go').onclick=async()=>{
     const {error}=await sb.auth.signInWithPassword({email:document.getElementById('em').value.trim(),password:document.getElementById('pw').value});
     if(error)return alert('الإيميل أو كلمة السر غلط.');
-    const ok=await loadAdmin();
-    if(ok!==true){view='home';render();return alert(ok==='noadmin'?'الحساب ده مش مسجّل كأدمن لأي مرحلة. كلّم صاحب التطبيق.':'تعذّر التحقق من صلاحيات الحساب. جرّب تاني.')}
-    view='home';reload()};
+    admin=true;view='home';reload()};
 }
 
 /* ---------- صفحة المادة ---------- */
@@ -610,8 +710,7 @@ function subject(){
 async function stats(){
   app.innerHTML=`<div class="bar"><button class="g" id="back">→</button><h1>📊 الإحصائيات</h1></div><div id="sbox"><p class="empty">جاري التحميل…</p></div>`;
   document.getElementById('back').onclick=()=>{view='home';render()};
-  let {data,error}=await sb.rpc('visit_stats_v2',{p_stage:adminStage});
-  if(error&&!adminStage){const o=await sb.rpc('visit_stats');data=o.data;error=o.error}
+  const {data,error}=await sb.rpc('visit_stats');
   const box=document.getElementById('sbox');if(!box)return;
   if(error||!data){box.innerHTML='<p class="empty">تعذّر تحميل الإحصائيات. اتأكد إنك شغّلت كود الـ SQL الخاص بالزيارات في Supabase.</p>';return}
   const by=(data.by||[]).map(r=>`<div class="f"><span class="n">${esc(STAGES[r.stage-1]||'—')} · ${esc(TERMS[r.term]||'—')}</span><b>${esc(r.n)}</b></div>`).join('');
@@ -937,7 +1036,7 @@ function noteModal(id){
 /* --- بلاغ لينك مش شغال --- */
 async function loadReports(){
   if(!admin){reports=[];return}
-  try{let qy=sb.from('reports').select('*').order('created_at',{ascending:false}).limit(300);if(adminStage)qy=qy.eq('stage',adminStage);const r=await qy;reports=r.error?[]:(r.data||[])}catch(e){reports=[]}
+  try{const r=await sb.from('reports').select('*').order('created_at',{ascending:false}).limit(300);reports=r.error?[]:(r.data||[])}catch(e){reports=[]}
 }
 function reportModal(id){
   const it=items.find(i=>String(i.id)===String(id));if(!it)return;
@@ -947,7 +1046,7 @@ function reportModal(id){
     document.getElementById('rx').onclick=closeChoice;
     document.getElementById('rs').onclick=async ev=>{
       ev.target.disabled=true;
-      const {error}=await sb.from('reports').insert({kind:'broken',stage:((subs.find(s=>String(s.id)===String(it.subject_id))||{}).stage||stage||null),item_id:String(it.id),subject_id:String(it.subject_id),title:String(it.title).slice(0,200),note:document.getElementById('rn').value.trim().slice(0,300),device:devId()});
+      const {error}=await sb.from('reports').insert({kind:'broken',item_id:String(it.id),subject_id:String(it.subject_id),title:String(it.title).slice(0,200),note:document.getElementById('rn').value.trim().slice(0,300),device:devId()});
       if(error){ev.target.disabled=false;return alert('تعذّر الإرسال. اتأكد من النت وجرّب تاني.')}
       ls.set(k,dayKey());closeChoice();alert('وصل البلاغ، شكرًا ليك 🙏')}});
 }
@@ -960,7 +1059,7 @@ function sugView(){
     const t=document.getElementById('sg').value.trim();if(!t)return alert('اكتب اقتراحك الأول.');
     if(Date.now()-(+ls.get('sgt')||0)<30000)return alert('استنى شوية قبل ما تبعت اقتراح تاني.');
     ev.target.disabled=true;
-    const {error}=await sb.from('reports').insert({kind:'suggestion',stage:stage||null,note:t.slice(0,500),device:devId()});
+    const {error}=await sb.from('reports').insert({kind:'suggestion',note:t.slice(0,500),device:devId()});
     ev.target.disabled=false;
     if(error)return alert('تعذّر الإرسال. اتأكد من النت وجرّب تاني.');
     ls.set('sgt',String(Date.now()));alert('وصل اقتراحك، شكرًا ليك 🙏');view='home';render()};
@@ -1043,7 +1142,7 @@ function pomoView(){
   try{
     loadSel();loadGpa();loadPlan();plDone=loadSet('plandone');done=loadSet('done');fav=loadSet('fav');seen=ls.get('seen')==='2';
     sb=supabase.createClient(SB_URL,SB_KEY);
-    await loadAdmin();
+    try{const {data}=await sb.auth.getSession();admin=!!(data&&data.session)}catch(e){admin=false}
     if(await load()){await loadReports();render();logVisit()}
   }catch(e){app.innerHTML='<p class="empty">حصلت مشكلة في التحميل. جرّب تحدّث الصفحة.</p>'}
 })();
